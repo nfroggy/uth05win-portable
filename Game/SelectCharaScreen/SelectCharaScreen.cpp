@@ -1,4 +1,4 @@
-#include ".\selectcharascreen.h"
+#include "SelectCharaScreen.h"
 #include "../Game.h"
 #include "../../gameLib/CommonFunction/CommonFunctionInput.h"
 #include "../../gameLib/CommonFunction/CommonFunctionGraphic.h"

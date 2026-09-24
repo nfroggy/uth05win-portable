@@ -31,9 +31,9 @@ protected:
 	bool ValidateFormat();
 
 public:
-	__forceinline int NSprite() {return m_nFile;}
-	__forceinline int GetWidth() {return m_width;}
-	__forceinline int GetHeight() {return m_height;}
+	inline int NSprite() {return m_nFile;}
+	inline int GetWidth() {return m_width;}
+	inline int GetHeight() {return m_height;}
 	bool ExtractImage(unsigned char *outBuf, int recordIdx,unsigned char *palette);
 
 public:

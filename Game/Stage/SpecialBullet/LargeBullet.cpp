@@ -1,4 +1,4 @@
-#include ".\largebullet.h"
+#include "LargeBullet.h"
 #include "../Stage.h"
 #include "../Chara/Chara.h"
 

@@ -1,46 +1,17 @@
-/*
-	This class is NOT thread-safe. Make sure not to call is simultaneously from multiple threads
-*/
-
 #pragma once
-#include "../Graphic/include/glew.h"
-#include <gl/gl.h>
+#include "mygl.h"
 
-namespace th5w{
-
-class CPC98Font
-{
-protected:
-	static bool s_bFontLoaded;
-	static GLuint s_fontTex;
-
-protected:
-	static bool s_bCacheInited;
-	static int s_curCacheWriteIdx;
-	static int s_charIdxInCache[65536];
-	static int s_cacheList[200];
-	static GLuint s_displayListBase;
-
-protected:
-	static GLuint s_CommonCharTex;
-
+namespace th5w {
+class CPC98Font {
+    static bool s_bFontLoaded;
+    static GLuint s_fontTex;
+    static int ConvertCharToTexXY(float *x, float *y, unsigned char *str);
 public:
-	static bool CreateTextureForCommonChar();
-	static void DestroyTextureForCommonChar();
-
-
-protected:
-	static int ConvertCharToTexXY(float *outX,float *outY,unsigned char *str);
-	static GLuint GetDisplayListForChar(int charIdx);
-
-public:
-	static bool LoadAnex86BMP(const char *fileName);
-	static bool DrawString(char *str,int nChar,int drawX,int drawY,float colorR,float colorG,float colorB,
-						   float fadeInScale=1.0,bool coordIsUpperLeft=true);	//the string must be in Shift-JIS code
-	static void FinalizeCache();
-public:
-	CPC98Font(void);
-	~CPC98Font(void);
+    static bool CreateTextureForCommonChar();
+    static void DestroyTextureForCommonChar();
+    static bool LoadAnex86BMP(const char *filename);
+    static bool DrawString(char *str, int nChar, int x, int y, float r, float g, float b,
+                           float fade = 1.0, bool upperLeft = true);
+    static void FinalizeCache();
 };
-
 }

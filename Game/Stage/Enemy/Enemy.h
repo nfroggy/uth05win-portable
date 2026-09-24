@@ -62,12 +62,12 @@ protected:
 	void EnemyDie(ENEMY *pEnemy);
 
 protected:
-	__forceinline static void UpdateVelXYFromSpeedAngle(ENEMY *pEnemy)
+	inline static void UpdateVelXYFromSpeedAngle(ENEMY *pEnemy)
 	{
 		pEnemy->velX=(float)cos(pEnemy->curAngle/256.0f*2*PI)*pEnemy->curSpeed;
 		pEnemy->velY=(float)sin(pEnemy->curAngle/256.0f*2*PI)*pEnemy->curSpeed;
 	}
-	__forceinline static bool MoveAndTestLeave(ENEMY *pEnemy)
+	inline static bool MoveAndTestLeave(ENEMY *pEnemy)
 	{
 		pEnemy->lastX=pEnemy->curX;
 		pEnemy->lastY=pEnemy->curY;

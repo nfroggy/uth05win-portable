@@ -1,9 +1,9 @@
 #pragma once
 #include "../Graphic/2DImage.h"
 #include "../Graphic/2DImageArray.h"
-#include "../th5DatFile/bft/BFTFile.h"
+#include "../th5DatFile/BFT/BFTFile.h"
 #include "../th5DatFile/CD2CDG/CD2CDGFile.h"
-#include "../th5DatFile/pi/PIFile.h"
+#include "../th5DatFile/PI/PIFile.h"
 #include "../th5DatFile/th5DatFile.h"
 
 

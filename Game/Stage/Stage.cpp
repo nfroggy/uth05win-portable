@@ -1,4 +1,5 @@
-#include ".\stage.h"
+#include "../../gameLib/Misc/Random.h"
+#include "Stage.h"
 #include "../Game.h"
 #include "Chara/Chara.h"
 #include "CharaBullet/CharaBullet.h"
@@ -14,7 +15,7 @@
 #include "MidBoss/MidBoss.h"
 #include "TextOverlay/TextOverlay.h"
 #include "Dialogue/Dialogue.h"
-#include "boss/Boss.h"
+#include "Boss/Boss.h"
 #include "Laser/Laser.h"
 #include "Summary/Summary.h"
 #include "Stage2BG/Stage2BG.h"
@@ -111,9 +112,9 @@ void CStage::UploadVarToGlobal()
 
 void CStage::DownloadVarFromGlobal()
 {
-	//make sure that after creation of CStage, no rand() calls before this statement,
+	//make sure that after creation of CStage, no GameRandom() calls before this statement,
 	//otherwise, replays may work incorrectly!
-	srand(CGame::GVar().m_randomSeed[CGame::GVar().m_playStage]);
+	SeedGameRandom(CGame::GVar().m_randomSeed[CGame::GVar().m_playStage]);
 	//printf("------------------\n");
 	//printf("%d\n",CGame::GVar().m_randomSeed[CGame::GVar().m_playStage]);
 	//printf("------------------\n");

@@ -1,4 +1,4 @@
-#include ".\bftfile.h"
+#include "BFTFile.h"
 #include <string.h>
 
 namespace th5w{

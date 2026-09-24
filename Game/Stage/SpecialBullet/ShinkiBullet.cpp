@@ -1,4 +1,4 @@
-#include ".\shinkibullet.h"
+#include "ShinkiBullet.h"
 #include "../Stage.h"
 #include "../Chara/Chara.h"
 

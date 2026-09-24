@@ -1,4 +1,5 @@
-#include ".\bossstage3.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "BossStage3.h"
 #include "../Stage.h"
 #include "../../Game.h"
 #include "../CharaBullet/CharaBullet.h"
@@ -76,7 +77,7 @@ int CBossStage3::PuppetShootType0(int idx)
 		shootInfo.bulletBornType=16;
 		shootInfo.bulletSpeed=32;
 		shootInfo.shootType=EST00_SINGLE;
-		shootInfo.shootAngle=(float)(rand()%256);
+		shootInfo.shootAngle=(float)(GameRandom()%256);
 		m_pStage->m_pEnemyBullet->TuneEnemyShootInfo(&shootInfo);
 		m_pStage->m_pEnemyBullet->Shoot(&shootInfo);
 		m_puppet[idx].image=194;
@@ -282,9 +283,9 @@ void CBossStage3::StepPuppet()
 			}
 			if (res!=0)
 			{
-				m_puppet[i].tarX=32.0f*16.0f+(float)(rand()%(320*16));
-				m_puppet[i].tarY=16.0f*16.0f+(float)(rand()%(160*16));
-				m_puppet[i].mode=rand()%4;
+				m_puppet[i].tarX=32.0f*16.0f+(float)(GameRandom()%(320*16));
+				m_puppet[i].tarY=16.0f*16.0f+(float)(GameRandom()%(160*16));
+				m_puppet[i].mode=GameRandom()%4;
 				m_puppet[i].shootAge=0;
 			}
 			else
@@ -366,9 +367,9 @@ void CBossStage3::Phase2Shoot()
 		for (int i=0;i<32;i++)
 		{
 			shootInfo.bulletImg=44*(i%2);
-			shootInfo.bulletSpeed=(float)(12+rand()%64);
-			shootInfo.shootOrigX=(float)(m_curX+rand()%(48*16)-24*16);
-			shootInfo.shootOrigY=(float)(m_curY+rand()%(48*16)-32*16);
+			shootInfo.bulletSpeed=(float)(12+GameRandom()%64);
+			shootInfo.shootOrigX=(float)(m_curX+GameRandom()%(48*16)-24*16);
+			shootInfo.shootOrigY=(float)(m_curY+GameRandom()%(48*16)-32*16);
 			m_pStage->m_pEnemyBullet->Shoot(&shootInfo);
 		}
 		m_curImage=182;
@@ -640,7 +641,7 @@ void CBossStage3::Phase3_6_9_12()
 			if (m_nModeChange>=24)
 				bPhaseEnd=true;
 			else
-				m_curMode=rand()%3+1;
+				m_curMode=GameRandom()%3+1;
 		}
 	}
 	else

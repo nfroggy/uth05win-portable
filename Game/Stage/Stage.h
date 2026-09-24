@@ -1,12 +1,12 @@
 #pragma once
-#include "../scheme.h"
+#include "../Scheme.h"
 #include "../../gameLib/Graphic/2DImageArray.h"
 #include "../../gameLib/CommonFunction/CommonFunctionGraphic.h"
 #include "../../gameLib/CommonFunction/CommonFunctionMusicSE.h"
 #include "../../gameLib/CommonFunction/CommonFunctionInput.h"
-#include "../../gameLib/th5DatFile/bb/BBFile.h"
-#include "../../gameLib/th5DatFile/mpn/MPNFile.h"
-#include "../../gameLib/th5DatFile/std/STDFile.h"
+#include "../../gameLib/th5DatFile/BB/BBFile.h"
+#include "../../gameLib/th5DatFile/MPN/MPNFile.h"
+#include "../../gameLib/th5DatFile/STD/STDFile.h"
 #include "StageResource.h"
 
 #include <math.h>
@@ -22,6 +22,49 @@
 #define STAGE_END_REPLAY_END 4
 
 namespace th5w{
+
+class CChara;
+class CCharaReimu;
+class CCharaMarisa;
+class CCharaMima;
+class CCharaYuka;
+class CCharaBullet;
+class CEnemyBullet;
+class CGatherEffect;
+class CSparkEffect;
+class CPopupNumber;
+class CCircle;
+class CItem;
+class CFloatingText;
+class CBackground;
+class CEnemy;
+class CTextOverlay;
+class CDialogue;
+class CMidBoss;
+class CMidBossStage1;
+class CMidBossStage2;
+class CMidBossStage3;
+class CMidBossStage4;
+class CMidBossStage5;
+class CMidBossStageEx;
+class CBoss;
+class CBossStage1;
+class CBossStage2;
+class CBossStage3;
+class CBossStage4;
+class CBossStage4Mai;
+class CBossStage4Yuki;
+class CBossStage5;
+class CBossStage6;
+class CBossStageEx;
+class CLaser;
+class CSummary;
+class CStage2BG;
+class CCurvingBullet;
+class CLargeBullet;
+class CKnifeBullet;
+class CShinkiBullet;
+class CStageResource;
 
 class CStage : public CScheme
 {
@@ -104,7 +147,7 @@ protected:
 
 protected:
 	CStageResource *m_pStageRes;
-	__forceinline CStageResource* GetRes() {return m_pStageRes;}
+	inline CStageResource* GetRes() {return m_pStageRes;}
 
 public:
 	bool m_bPlaySound[16];
@@ -171,7 +214,7 @@ protected:
 	int m_curFrame;
 
 public:
-	__forceinline int GetCurFrameCount(){return m_curFrame;}
+	inline int GetCurFrameCount(){return m_curFrame;}
 
 protected:
 	unsigned short m_lastMenuKeyState;
@@ -184,8 +227,8 @@ protected:
 	int m_playAreaUpperLeftX,m_playAreaUpperLeftY;
 
 public:
-	__forceinline unsigned short GetCurKeyState() {return m_curGameKeyState;}
-	__forceinline unsigned short GetLastKeyState() {return m_lastGameKeyState;}
+	inline unsigned short GetCurKeyState() {return m_curGameKeyState;}
+	inline unsigned short GetLastKeyState() {return m_lastGameKeyState;}
 
 public:
 	void Initialize();
@@ -199,7 +242,7 @@ protected:
 	float m_homingEnemyX,m_homingEnemyY;
 
 public:
-	__forceinline void ChangePlayerPerformance(int deltaPerformance)
+	inline void ChangePlayerPerformance(int deltaPerformance)
 	{
 		m_playerPerformance+=deltaPerformance;
 		if (m_playerPerformance>m_playerPerformanceUpperBound)
@@ -210,7 +253,7 @@ public:
 
 protected:
 	int AdjustDamageFromChara(int origDmg, bool isBoss);
-	__forceinline float AdjustSpeedBasedOnPlayerPerformance(float origSpeed)
+	inline float AdjustSpeedBasedOnPlayerPerformance(float origSpeed)
 	{
 		float ret=origSpeed*(0.5f+(float)m_playerPerformance/64.0f);
 		if (ret>128) ret=128;
@@ -221,10 +264,10 @@ public:
 	int GetDamageFromChara(float ctrX,float ctrY,float halfWidth,float halfHeight,bool isBoss);
 
 public:
-	__forceinline int GetDream() {return m_curDream;}
+	inline int GetDream() {return m_curDream;}
 	void SetDream(int newDream);
 public:
-	__forceinline void AddScore(int deltaScore)
+	inline void AddScore(int deltaScore)
 	{
 		if (m_curScore<m_highScore&&m_curScore+deltaScore>m_highScore)
 		{

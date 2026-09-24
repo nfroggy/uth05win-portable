@@ -1,4 +1,4 @@
-#include ".\commonfunctioninput.h"
+#include "CommonFunctionInput.h"
 #include "../../Game/Game.h"
 
 namespace th5w{
@@ -23,19 +23,19 @@ unsigned short CCommonFunctionInput::GetAllKeyState()
 
 	CGame::s_pCurGame->m_input.UpdateKeyState();
 	unsigned short ret=0;
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_UP))<<0;
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_DOWN))<<1;
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_LEFT))<<2;
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_RIGHT))<<3;
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_X))<<4;
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_Z))<<5;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_UP))<<0;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_DOWN))<<1;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_LEFT))<<2;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_RIGHT))<<3;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_X))<<4;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_Z))<<5;
 	//PC98 version does not include shift status in the key state but manage it in another variable
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_LSHIFT))<<6;
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_LCONTROL))<<7;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_LSHIFT))<<6;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_LCTRL))<<7;
 
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_ESCAPE))<<12;
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_RETURN))<<13;
-	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(DIK_Q))<<14;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_ESCAPE))<<12;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_RETURN))<<13;
+	ret|=((unsigned short)CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_Q))<<14;
 
 	return ret;
 }

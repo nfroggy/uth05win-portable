@@ -1,4 +1,4 @@
-#include ".\ending.h"
+#include "Ending.h"
 #include "../../gameLib/PMDPlayer/PMDPlayer.h"
 #include "../Game.h"
 #include "../../gameLib/CommonFunction/CommonFunctionMusicSE.h"
@@ -186,7 +186,7 @@ int CEnding::Step()
 						char s[100];
 						sscanf((char *)m_pScript+3,"%s",s);
 						m_pScript+=3+(int)strlen(s);
-						strlwr(s);
+						for (char *c = s; *c; ++c) if (*c >= 'A' && *c <= 'Z') *c += 'a' - 'A';
 						int idx=CGame::s_pCurGame->m_th5Dat1.GetChildFileIndex(s);
 						C2DImage *pImg;
 						CCommonFunctionGraphic::LoadPIFromDat(&pImg,m_palette,&CGame::s_pCurGame->m_th5Dat1,s);
@@ -297,7 +297,7 @@ int CEnding::Step()
 						char s[100];
 						sscanf((char *)m_pScript+3,"%s",s);
 						m_pScript+=3+(int)strlen(s);
-						strlwr(s);
+						for (char *c = s; *c; ++c) if (*c >= 'A' && *c <= 'Z') *c += 'a' - 'A';
 						strcat(s,".m2");
 						CCommonFunctionMusicSE::LoadMusicToPMDFromDat(&CGame::s_pCurGame->m_th5Dat1,s);
 						CPMDPlayer::FillSoftwareBuffer(10000);

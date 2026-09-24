@@ -1,5 +1,5 @@
 #pragma once
-#include "..\scheme.h"
+#include "../Scheme.h"
 #include "../../gameLib/Graphic/2DImageArray.h"
 #include "TitleRollingTama.h"
 
@@ -36,11 +36,11 @@ protected:
 	//menu vars
 	int m_mainMenuNItem;
 	int m_mainMenuCursorPosition;
-	bool m_bMainMenuItemEnabled[6];
+	bool m_bMainMenuItemEnabled[7];
 
 	int m_optionMenuNItem;
 	int m_optionMenuCursorPosition;
-	bool m_bOptionMenuItemEnabled[6];
+	bool m_bOptionMenuItemEnabled[8];
 
 	int m_curMenu;			//1 for main menu, 1 for option menu
     bool m_bMenuOn;
@@ -67,7 +67,7 @@ protected:
 	void DrawDescString(char *descStr);
 
 protected:
-	__forceinline void ChangeValue(int *value, int deltaValue, int minValue,int maxValue)
+	inline void ChangeValue(int *value, int deltaValue, int minValue,int maxValue)
 	{
 		(*value)+=deltaValue;
 		if ((*value)<minValue) (*value)+=maxValue-minValue+1;

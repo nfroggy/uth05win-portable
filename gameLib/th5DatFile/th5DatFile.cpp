@@ -1,4 +1,5 @@
-#include ".\th5datfile.h"
+#include <cstring>
+#include "th5DatFile.h"
 
 #define COMPRESS_NONE 0xF388
 #define COMPRESS_RLE  0x9595
@@ -20,7 +21,7 @@ void Cth5DatFile::Reset()
 {
 	for (int i=0;i<(int)m_childFileContent.size();i++)
 		if (m_childFileContent[i]!=NULL)
-			delete m_childFileContent[i];
+			delete[] m_childFileContent[i];
 	m_childFileContent.clear();
 	m_childFileName.clear();
 	m_childFilePointer.clear();
@@ -56,14 +57,14 @@ bool Cth5DatFile::DecodeSingleFile(unsigned char *controlBlock,int curFileIdx,FI
 		unsigned char *inBuffer=new unsigned char[compressedFileSize];
 		if (inBuffer==NULL)
 		{
-			delete outBuffer;
+			delete[] outBuffer;
 			return false;
 		}
 		fseek(fpParent,origFileOffset,SEEK_SET);
 		if (fread(inBuffer,1,compressedFileSize,fpParent)!=compressedFileSize)
 		{
-			delete outBuffer;
-			delete inBuffer;
+			delete[] outBuffer;
+			delete[] inBuffer;
 			return false;
 		}
 
@@ -92,8 +93,8 @@ bool Cth5DatFile::DecodeSingleFile(unsigned char *controlBlock,int curFileIdx,FI
 		unsigned char *outBufferFinal=new unsigned char[extractedFileSize];
 		if (outBufferFinal==NULL)
 		{
-			delete inBuffer;
-			delete outBuffer;
+			delete[] inBuffer;
+			delete[] outBuffer;
 			return false;
 		}
 
@@ -103,8 +104,8 @@ bool Cth5DatFile::DecodeSingleFile(unsigned char *controlBlock,int curFileIdx,FI
 		memcpy(outBufferFinal, outBuffer,extractedFileSize);
 		m_childFileContent.push_back(outBufferFinal);
 
-		delete inBuffer;
-		delete outBuffer;
+		delete[] inBuffer;
+		delete[] outBuffer;
 		return true;
 	}
 	if (compressMode==COMPRESS_NONE)
@@ -115,14 +116,14 @@ bool Cth5DatFile::DecodeSingleFile(unsigned char *controlBlock,int curFileIdx,FI
 		unsigned char *inBuffer=new unsigned char[compressedFileSize];
 		if (inBuffer==NULL)
 		{
-			delete outBuffer;
+			delete[] outBuffer;
 			return false;
 		}
 		fseek(fpParent,origFileOffset,SEEK_SET);
 		if (fread(inBuffer,1,compressedFileSize,fpParent)!=compressedFileSize)
 		{
-			delete outBuffer;
-			delete inBuffer;
+			delete[] outBuffer;
+			delete[] inBuffer;
 			return false;
 		}
 
@@ -134,6 +135,7 @@ bool Cth5DatFile::DecodeSingleFile(unsigned char *controlBlock,int curFileIdx,FI
 		m_childFileName.push_back(fileName);
 		m_childFilePointer.push_back(0);
 		m_childFileContent.push_back(outBuffer);
+		delete[] inBuffer;
 
 		return true;
 	}
@@ -159,7 +161,7 @@ bool Cth5DatFile::LoadFile(const char *fileName)
 	unsigned char fileTableKey=header[6];
 	unsigned char *fileTable=new unsigned char[fileTableSize];
 
-#define CLOSE_DELETE_RETFALSE(x,y) {fclose(x);delete y;return false;}
+#define CLOSE_DELETE_RETFALSE(x,y) {fclose(x);delete[] y;return false;}
 
 	if (fread(fileTable,1,fileTableSize,fpi)!=fileTableSize)
 		CLOSE_DELETE_RETFALSE(fpi,fileTable);
@@ -181,7 +183,7 @@ bool Cth5DatFile::LoadFile(const char *fileName)
 #undef CLOSE_DELETE_RETFALSE
 #undef CLOSE_RETFALSE
 
-	delete fileTable;
+	delete[] fileTable;
 	fclose(fpi);
 
 	return true;
@@ -275,7 +277,7 @@ int Cth5DatFile::GetChildFileIndex(const char *childFileName)
 {
 	char ucFileName[1000];
 	strcpy(ucFileName,childFileName);
-	strupr(ucFileName);
+	for (char *c = ucFileName; *c; ++c) if (*c >= 'a' && *c <= 'z') *c -= 'a' - 'A';
 	for (int i=0;i<NFile();i++)
 		if (GetChildFileName(i)==ucFileName)
 			return i;

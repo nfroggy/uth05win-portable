@@ -1,7 +1,7 @@
 #pragma once
 #include <stdio.h>
-#include "include/glew.h"
-#include <gl/GL.h>
+#include "mygl.h"
+#include <GL/gl.h>
 
 namespace th5w{
 
@@ -15,7 +15,7 @@ protected:
 	unsigned char *m_data;
 	GLuint m_texID;
 public:
-	__forceinline GLuint GetTexID(){return m_texID;}
+	inline GLuint GetTexID(){return m_texID;}
 
 public:
 	static C2DImage* Create2DImage(int width,int height);

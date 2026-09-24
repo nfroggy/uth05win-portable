@@ -39,8 +39,8 @@ public:
 	int Step();
 	void Draw();
 	void Run();
-	__forceinline void SetDialogueScript(unsigned char *pScript) {m_pScript=pScript;}
-	__forceinline bool IsRunning() {return m_bRunning;}
+	inline void SetDialogueScript(unsigned char *pScript) {m_pScript=pScript;}
+	inline bool IsRunning() {return m_bRunning;}
 
 public:
 	CDialogue(CStage *pStage);

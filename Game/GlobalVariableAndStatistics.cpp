@@ -1,18 +1,17 @@
-#include ".\globalvariableandstatistics.h"
+#include "../gameLib/Misc/Random.h"
+#include "GlobalVariableAndStatistics.h"
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <direct.h>
+#include <filesystem>
 #include "../gameLib/CommonFunction/CommonFunctionSystem.h"
 
 namespace th5w{
 
 CGlobalVariableAndStatistics::CGlobalVariableAndStatistics(void)
 {
-	getcwd(m_workingPath,999);
-	if (m_workingPath[strlen(m_workingPath)-1]!='\\')
-		strcat(m_workingPath,"\\");
+	snprintf(m_workingPath, sizeof(m_workingPath), "%s/", std::filesystem::current_path().string().c_str());
 	strcpy(m_replaySubDir,"replay");
 	memset(m_modMD5,0,sizeof(m_modMD5));
 	m_gameVersion=1;
@@ -221,9 +220,9 @@ void CGlobalVariableAndStatistics::OnBeginGame()
 	else
 	{
 		m_replay.Reset();
-		srand((unsigned int)time(NULL));
+		SeedGameRandom((unsigned int)time(NULL));
 		for (int i=0;i<7;i++)
-			m_randomSeed[i]=rand()*32768+rand();
+			m_randomSeed[i]=GameRandom()*32768+GameRandom();
 		m_replay.m_nInitLife=m_nInitLife;
 		m_replay.m_nInitBomb=m_nInitBomb;
 		m_replay.m_playDifficulty=m_playDifficulty;

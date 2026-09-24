@@ -1,5 +1,5 @@
 #pragma once
-#include "boss.h"
+#include "Boss.h"
 #include "../SpecialBullet/LargeBullet.h"
 
 namespace th5w{
@@ -10,9 +10,9 @@ friend class CStage;
 friend class CBossStage4;
 
 protected:
-	__forceinline void SetX(float v) {m_curX=v;}
-	__forceinline void SetY(float v) {m_curY=v;}
-	__forceinline void SetStage(CStage *p) {m_pStage=p;}
+	inline void SetX(float v) {m_curX=v;}
+	inline void SetY(float v) {m_curY=v;}
+	inline void SetStage(CStage *p) {m_pStage=p;}
 
 protected:
 	bool m_bDrawLargeBullet;

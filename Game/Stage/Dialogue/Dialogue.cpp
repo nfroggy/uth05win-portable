@@ -1,4 +1,4 @@
-#include ".\dialogue.h"
+#include "Dialogue.h"
 #include "../Stage.h"
 #include "../../Game.h"
 #include "../../../gameLib/Graphic/Th5ExtFont.h"

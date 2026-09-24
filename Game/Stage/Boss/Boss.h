@@ -102,8 +102,8 @@ public:
 	virtual void DrawStatistics()=0;
 	virtual void DrawBackground()=0;
 public:
-	__forceinline int GetCurPhase(){return m_curPhase;}
-	__forceinline int GetCurPhaseFrame(){return m_curPhaseFrame;}
+	inline int GetCurPhase(){return m_curPhase;}
+	inline int GetCurPhaseFrame(){return m_curPhaseFrame;}
 
 public:
 	CBoss(void);

@@ -1,9 +1,6 @@
-#include <windows.h>
-#include ".\commonfunctiongraphic.h"
+#include "CommonFunctionGraphic.h"
 #include "../../Game/Game.h"
 #include <math.h>
-#include <tchar.h>
-#include <atlimage.h>
 
 
 namespace th5w{
@@ -168,30 +165,25 @@ bool CCommonFunctionGraphic::LoadBFTAllPatternFromDat(C2DImageArray *pOutImgArra
 
 bool CCommonFunctionGraphic::LoadBinaryImageFile(C2DImage **pRet,unsigned char transparentColor[3], const char *fileName)
 {
-	CImage img;
-	TCHAR fileNameBuf[1000];
-	wsprintf(fileNameBuf,_T("%S"),fileName);
-	if (img.Load(fileNameBuf)!=0)
-		return false;
-	int width=img.GetWidth();
-	int height=img.GetHeight();
-	unsigned char *pData=(unsigned char *)img.GetBits();
-	pData+=img.GetPitch()*(height-1);			//move to last line
+    SDL_Surface *loaded = SDL_LoadBMP(fileName);
+    if (!loaded) return false;
+    SDL_Surface *img = SDL_ConvertSurface(loaded, SDL_PIXELFORMAT_RGB24);
+    SDL_DestroySurface(loaded);
+    if (!img) return false;
+    const int width = img->w, height = img->h;
+    C2DImage *pImg = C2DImage::Create2DImage(width, height);
+    unsigned char *pWrite = pImg->GetDataPointer();
+    for (int y = height - 1; y >= 0; --y) {
+        auto *row = static_cast<unsigned char *>(img->pixels) + y * img->pitch;
+        for (int x = 0; x < width; ++x, pWrite += 4) {
+            // The original CImage reader supplied BGR pixels.
+            const bool transparent = row[x*3] == transparentColor[2] &&
+                row[x*3+1] == transparentColor[1] && row[x*3+2] == transparentColor[0];
+            memset(pWrite, transparent ? 0 : 255, 4);
+        }
+    }
+    SDL_DestroySurface(img);
 
-	C2DImage *pImg=C2DImage::Create2DImage(width,height);
-	unsigned char *pWrite=pImg->GetDataPointer();
-	unsigned char *tc=transparentColor;
-	for (int i=0;i<height;i++)
-	{
-		for (int j=0;j<width;j++,pWrite+=4)
-		{
-			unsigned char v=255;
-			if (pData[j*3]==tc[0]&&pData[j*3+1]==tc[1]&&pData[j*3+2]==tc[2])
-				v=0;
-			pWrite[0]=pWrite[1]=pWrite[2]=pWrite[3]=v;
-		}
-		pData-=img.GetPitch();
-	}
 	if (pImg->UploadToTexture()==false)
 	{
 		pImg->Destroy();

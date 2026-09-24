@@ -1,7 +1,8 @@
-#include ".\midbossstage4.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "MidBossStage4.h"
 #include <stdlib.h>
 #include "../Stage.h"
-#include "../../game.h"
+#include "../../Game.h"
 
 namespace th5w{
 
@@ -74,8 +75,8 @@ int CMidBossStage4::FadeOutAndIn()
 	{
 		if (frameIdx==32)
 		{
-			m_phase1FadeCenterX=(float)(64+rand()%256)*16;
-			m_curY=(float)(64+rand()%32)*16;
+			m_phase1FadeCenterX=(float)(64+GameRandom()%256)*16;
+			m_curY=(float)(64+GameRandom()%32)*16;
 			return 0;
 		}
 		frameIdx=64-frameIdx;
@@ -115,8 +116,8 @@ void CMidBossStage4::Phase1Mode1()
 		for (int i=0;i<4;i++)
 		{
 			shootInfo.bulletImg=i%2*116;
-			shootInfo.shootOrigX=m_curX+(float)(rand()%(48*16)-24*16);
-			shootInfo.shootOrigY=m_curY+(float)(rand()%(48*16)-24*16);
+			shootInfo.shootOrigX=m_curX+(float)(GameRandom()%(48*16)-24*16);
+			shootInfo.shootOrigY=m_curY+(float)(GameRandom()%(48*16)-24*16);
 			m_pStage->m_pEnemyBullet->Shoot(&shootInfo,false,false);
 			shootInfo.bulletSpeed+=16;
 		}
@@ -224,7 +225,7 @@ void CMidBossStage4::Phase1()
 			if (m_phase1NModeChange>=16)
 				bPhaseEnd=true;
 			if (m_phase1CurMode==2)
-				m_phase1Mode2Angle=(float)(rand()%256);
+				m_phase1Mode2Angle=(float)(GameRandom()%256);
 		}
 		break;
 	case 1:

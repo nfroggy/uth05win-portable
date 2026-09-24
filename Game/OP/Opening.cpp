@@ -1,5 +1,4 @@
-#include <windows.h>
-#include ".\opening.h"
+#include "Opening.h"
 #include <time.h>
 #include "../../gameLib/PMDPlayer/PMDPlayer.h"
 #include "../Game.h"
@@ -62,7 +61,7 @@ int COpening::Step()
 	if (m_curFrame>50)
 	{
 		CGame::s_pCurGame->m_input.UpdateKeyState();
-		if (CGame::s_pCurGame->m_input.GetKeyState(DIK_Z)|CGame::s_pCurGame->m_input.GetKeyState(DIK_X))
+		if (CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_Z)|CGame::s_pCurGame->m_input.GetKeyState(SDL_SCANCODE_X))
 			m_bKeyPressed=true;
 	}
 

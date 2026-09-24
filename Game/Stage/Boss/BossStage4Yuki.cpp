@@ -1,4 +1,5 @@
-#include ".\bossstage4yuki.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "BossStage4Yuki.h"
 #include "../Stage.h"
 #include "../../Game.h"
 #include <math.h>
@@ -86,7 +87,7 @@ void CBossStage4Yuki::Phase3ShootType1()
 	if (m_curPhaseFrame==48)
 	{
 		m_curImage=208;
-		m_phase3ShootType1Angle=(float)(rand()%256);
+		m_phase3ShootType1Angle=(float)(GameRandom()%256);
 		m_phase3ShootType1DeltaAngle=1;
 		return;
 	}
@@ -138,9 +139,9 @@ void CBossStage4Yuki::Phase3ShootType2()
 		si.bulletBornType=18;
 		si.shootType=EST02_NWAY;
 		si.bulletImg=48;
-		si.nWay=rand()%8;
+		si.nWay=GameRandom()%8;
 		si.nWayUnitAngle=6;
-		si.bulletSpeed=(float)(8+rand()%32);
+		si.bulletSpeed=(float)(8+GameRandom()%32);
 		si.shootAngle=(float)(128+(m_curPhaseFrame-10)/2*6);
 		m_pStage->m_pEnemyBullet->TuneEnemyShootInfo(&si);
 		m_pStage->m_pEnemyBullet->Shoot(&si,true);
@@ -218,8 +219,8 @@ void CBossStage4Yuki::Phase5ShootType1()
 		si.bulletImg=0;
 		si.nWay=24;
 		m_pStage->m_pEnemyBullet->TuneEnemyShootInfo(&si);
-		si.shootAngle=(float)(rand()%256);
-		si.bulletSpeed=(float)(32+rand()%32);
+		si.shootAngle=(float)(GameRandom()%256);
+		si.bulletSpeed=(float)(32+GameRandom()%32);
 		m_pStage->m_pEnemyBullet->Shoot(&si);
 		m_pStage->m_bPlaySound[15]=true;
 	}
@@ -253,7 +254,7 @@ void CBossStage4Yuki::Phase5ShootType2()
 		si.nWayUnitAngle=12;
 		si.shootAngle=0;
 		m_pStage->m_pEnemyBullet->TuneEnemyShootInfo(&si);
-		si.bulletSpeed=(float)(16+rand()%32);
+		si.bulletSpeed=(float)(16+GameRandom()%32);
 		m_pStage->m_pEnemyBullet->Shoot(&si);
 		m_pStage->m_bPlaySound[15]=true;
 
@@ -385,7 +386,7 @@ void CBossStage4Yuki::Phase9ShootType1()
 	if (m_curPhaseFrame==32)
 	{
 		m_pStage->m_bPlaySound[15]=true;
-		m_phase9ShootType1Angle=(float)(rand()%256);
+		m_phase9ShootType1Angle=(float)(GameRandom()%256);
 	}
 	if (m_curPhaseFrame%4==0)
 	{

@@ -9,7 +9,7 @@ class C2DImageArray
 protected:
 	std::vector<C2DImage *> m_vp2DImage;
 public:
-	__forceinline int NImage()
+	inline int NImage()
 	{
 		return (int)m_vp2DImage.size();
 	}

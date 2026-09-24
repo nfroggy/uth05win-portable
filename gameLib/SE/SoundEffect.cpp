@@ -1,48 +1,42 @@
-#include ".\soundeffect.h"
-#include <stdio.h>
-#include <tchar.h>
+#include "SoundEffect.h"
+#include <cstdio>
 
-namespace th5w{
-
-CSoundEffect::CSoundEffect(void)
+namespace th5w {
+CSoundEffect::~CSoundEffect() { Finalize(); }
+void CSoundEffect::Finalize()
 {
+    for (auto &sound : m_sounds) {
+        if (sound.stream) SDL_DestroyAudioStream(sound.stream);
+        sound.stream = nullptr;
+        sound.data.clear();
+    }
 }
-
-CSoundEffect::~CSoundEffect(void)
+bool CSoundEffect::Initialize()
 {
+    for (int i = 1; i < 16; ++i) {
+        char filename[32];
+        snprintf(filename, sizeof(filename), "SE/s%02d.wav", i);
+        SDL_AudioSpec spec;
+        Uint8 *data;
+        Uint32 length;
+        if (!SDL_LoadWAV(filename, &spec, &data, &length)) {
+            SDL_Log("Cannot load %s: %s", filename, SDL_GetError());
+            return false;
+        }
+        m_sounds[i].data.assign(data, data + length);
+        SDL_free(data);
+        m_sounds[i].stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, nullptr, nullptr);
+        if (!m_sounds[i].stream || !SDL_ResumeAudioStreamDevice(m_sounds[i].stream)) return false;
+    }
+    return true;
 }
-
-bool CSoundEffect::Initialize(HWND hWnd)
+void CSoundEffect::PlaySound(int index)
 {
-	if (m_manager.Initialize(hWnd,DSSCL_PRIORITY)!=S_OK)
-		return false;
-
-	m_vpSound.clear();
-	m_vpSound.push_back(NULL);
-	CSound *pSound;
-	for (int i=1;i<16;i++)
-	{
-		TCHAR fileName[1000];
-		wsprintf(fileName,_T("SE/s%02d.wav"),i);
-		if (m_manager.Create(&pSound,fileName,DSBCAPS_CTRLPAN|DSBCAPS_CTRLVOLUME|DSBCAPS_CTRLFREQUENCY|
-											  DSBCAPS_GLOBALFOCUS|DSBCAPS_CTRLPOSITIONNOTIFY|DSBCAPS_LOCSOFTWARE)!=S_OK)
-			return false;
-		m_vpSound.push_back(pSound);
-	}
-
-	return true;
+    if (index <= 0 || index >= int(m_sounds.size())) return;
+    auto &sound = m_sounds[index];
+    if (!sound.stream) return;
+    SDL_ClearAudioStream(sound.stream);
+    SDL_PutAudioStreamData(sound.stream, sound.data.data(), int(sound.data.size()));
+    SDL_FlushAudioStream(sound.stream);
 }
-
-void CSoundEffect::PlaySound(int soundIdx)
-{
-	if (soundIdx<0||soundIdx>=(int)m_vpSound.size())
-		return;
-	if (m_vpSound[soundIdx]==NULL)
-		return;
-
-	m_vpSound[soundIdx]->Stop();
-	m_vpSound[soundIdx]->Reset();
-	m_vpSound[soundIdx]->Play();
-}
-
 }

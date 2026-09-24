@@ -1,5 +1,5 @@
 #pragma once
-#include "midboss.h"
+#include "MidBoss.h"
 
 namespace th5w{
 

@@ -3,9 +3,9 @@
 #include "../../gameLib/CommonFunction/CommonFunctionGraphic.h"
 #include "../../gameLib/CommonFunction/CommonFunctionMusicSE.h"
 #include "../../gameLib/CommonFunction/CommonFunctionInput.h"
-#include "../../gameLib/th5DatFile/bb/BBFile.h"
-#include "../../gameLib/th5DatFile/mpn/MPNFile.h"
-#include "../../gameLib/th5DatFile/std/STDFile.h"
+#include "../../gameLib/th5DatFile/BB/BBFile.h"
+#include "../../gameLib/th5DatFile/MPN/MPNFile.h"
+#include "../../gameLib/th5DatFile/STD/STDFile.h"
 
 namespace th5w{
 

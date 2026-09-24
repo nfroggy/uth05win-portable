@@ -19,8 +19,8 @@ protected:
 	float m_lastX,m_lastY;
 	float m_deltaX,m_deltaY;
 public:
-	__forceinline float GetCurX() {return m_curX;}
-	__forceinline float GetCurY() {return m_curY;}
+	inline float GetCurX() {return m_curX;}
+	inline float GetCurY() {return m_curY;}
 
 //params that must be initialized by child class constructor
 protected:
@@ -39,7 +39,7 @@ protected:
 	int m_powerLevel;
 public:
 	void SetPower(int newPower);
-	__forceinline int GetPower() {return m_power;}
+	inline int GetPower() {return m_power;}
 
 public:
 	bool m_bCharaCanMove;
@@ -49,7 +49,7 @@ public:
 protected:
 	int m_nextLifeComeTimeLeft;
 public:
-	__forceinline int GetNextLifeComeTimeLeft() {return m_nextLifeComeTimeLeft;}
+	inline int GetNextLifeComeTimeLeft() {return m_nextLifeComeTimeLeft;}
 protected:
 	int m_cannotControlTimeLeft;
 	float m_missExplodeRadius;
@@ -77,8 +77,8 @@ protected:
 	void OnMissDropItem();
 
 	bool m_bDraw;
-	__forceinline void DisableDraw() {m_bDraw=false;}
-	__forceinline void EnableDraw() {m_bDraw=true;}
+	inline void DisableDraw() {m_bDraw=false;}
+	inline void EnableDraw() {m_bDraw=true;}
 
 protected:
 	int m_collisionAreaAlpha;
@@ -91,7 +91,7 @@ public:
 	virtual void DrawBomb();
 	virtual int GetBombDamage(float ctrX,float ctrY,float halfWidth,float halfHeight,bool isBoss);
 	virtual bool TestCrash(float testX,float testY, float testHalfWidth,float testHalfHeight);
-	__forceinline float AngleToChara(float srcX,float srcY)
+	inline float AngleToChara(float srcX,float srcY)
 	{
 		return (float)(atan2(m_curY-srcY,m_curX-srcX)/2.0/PI*256);
 	}

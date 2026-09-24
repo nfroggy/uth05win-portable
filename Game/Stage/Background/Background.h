@@ -19,10 +19,10 @@ protected:
 	bool m_bDraw;
 	bool m_bForceDraw;
 public:
-	__forceinline int GetLastScrollDeltaPixel() {return m_curDeltaPixel;}
-	__forceinline int GetCurScrollSpeed() {return m_curSpeed;}
-	__forceinline void SetDraw(bool enable) {m_bDraw=enable;}
-	__forceinline void ForceDrawFirstScreen(bool enable) {m_bForceDraw=enable;}
+	inline int GetLastScrollDeltaPixel() {return m_curDeltaPixel;}
+	inline int GetCurScrollSpeed() {return m_curSpeed;}
+	inline void SetDraw(bool enable) {m_bDraw=enable;}
+	inline void ForceDrawFirstScreen(bool enable) {m_bForceDraw=enable;}
 public:
 	void Initialize();
 	void Step();

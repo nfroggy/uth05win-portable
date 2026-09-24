@@ -1,6 +1,5 @@
 #pragma once
 #include "Replay.h"
-#include <tchar.h>
 
 namespace th5w{
 

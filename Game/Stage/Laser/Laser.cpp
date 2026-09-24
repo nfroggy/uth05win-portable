@@ -1,4 +1,4 @@
-#include ".\laser.h"
+#include "Laser.h"
 #include "../Stage.h"
 #include "../Chara/Chara.h"
 #include "../EnemyBullet/EnemyBullet.h"

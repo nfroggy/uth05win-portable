@@ -1,4 +1,5 @@
-#include ".\boss.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "Boss.h"
 #include "../Stage.h"
 #include "../../Game.h"
 #include "../../../gameLib/Graphic/Th5ExtFont.h"
@@ -99,8 +100,8 @@ void CBoss::AddDefeatScoreAndPopupNumbers(int n1000)
 	m_pStage->AddScore(n1000*1000);
 	for (int i=0;i<n1000;i++)
 	{
-		float drawX=m_curX-64.0f*16.0f+(float)(rand()%2048);
-		float drawY=m_curY-64.0f*16.0f+(float)(rand()%2048);
+		float drawX=m_curX-64.0f*16.0f+(float)(GameRandom()%2048);
+		float drawY=m_curY-64.0f*16.0f+(float)(GameRandom()%2048);
 		m_pStage->m_pPopupNumber->AddNumber(drawX,drawY,1000*10,
 											m_pStage->m_pStageRes->m_palette[11*3]/255.0f,
 											m_pStage->m_pStageRes->m_palette[11*3+1]/255.0f,
@@ -117,12 +118,12 @@ int CBoss::RandomWalk(int frameIdx)
 	if (frameIdx==0)
 	{
 		if (m_curX<144.0f*16.0f)
-			m_randomWalkMovingAngle=(float)(rand()%96-48);
+			m_randomWalkMovingAngle=(float)(GameRandom()%96-48);
 		else
 			if (m_curX>240.0f*16.0f)
-				m_randomWalkMovingAngle=(float)(rand()%96+80);	//PC98 ver chooses randomly from 48/80/112/144, seems bug
+				m_randomWalkMovingAngle=(float)(GameRandom()%96+80);	//PC98 ver chooses randomly from 48/80/112/144, seems bug
 			else
-				m_randomWalkMovingAngle=(float)(rand()%256);
+				m_randomWalkMovingAngle=(float)(GameRandom()%256);
 		while (m_randomWalkMovingAngle>=256.0f)
 			m_randomWalkMovingAngle-=256.0f;
 		while (m_randomWalkMovingAngle<0.0f)
@@ -203,7 +204,7 @@ void CBoss::DropItem()
 	int itemSet[2][5]={{ITEM_POWER,ITEM_POWER,ITEM_BIGPOWER,ITEM_POWER,ITEM_POWER},
 					   {ITEM_POINT,ITEM_POINT,ITEM_POINT,ITEM_POINT,ITEM_POINT}};
 	for (int i=0;i<5;i++)
-		m_pStage->m_pItem->AddItem(m_curX-64.0f*16.0f+(float)(rand()%2048),m_curY-64.0f*16.0f+(float)(rand()%2048),
+		m_pStage->m_pItem->AddItem(m_curX-64.0f*16.0f+(float)(GameRandom()%2048),m_curY-64.0f*16.0f+(float)(GameRandom()%2048),
 								   itemSet[setIdx][i],0,-48);
 }
 

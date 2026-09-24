@@ -1,4 +1,4 @@
-#include ".\mpnfile.h"
+#include "MPNFile.h"
 #include <stdio.h>
 #include <string.h>
 

@@ -1,3 +1,4 @@
+#include <cstdint>
 /* MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm
 */
 
@@ -32,7 +33,7 @@ typedef unsigned char *POINTER;
 typedef unsigned short int UINT2;
 
 /* UINT4 defines a four byte word */
-typedef unsigned long int UINT4;
+typedef uint32_t UINT4;
 
 /* Constants for MD5Transform routine.
 */

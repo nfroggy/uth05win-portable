@@ -43,10 +43,10 @@ public:
 	void StartGrow(int laserIdx);
 	void SetMode(int laserIdx,unsigned char newMode);
 	void RemoveLaser(int laserIdx);
-	__forceinline float& LaserAngle(int laserIdx) {return m_laser[laserIdx].angle;}
-	__forceinline void SetLaserSrc(int laserIdx,float srcX,float srcY)
+	inline float& LaserAngle(int laserIdx) {return m_laser[laserIdx].angle;}
+	inline void SetLaserSrc(int laserIdx,float srcX,float srcY)
 	{m_laser[laserIdx].srcX=srcX;m_laser[laserIdx].srcY=srcY;}
-	__forceinline unsigned char GetMode(int laserIdx) {return m_laser[laserIdx].mode;}
+	inline unsigned char GetMode(int laserIdx) {return m_laser[laserIdx].mode;}
 protected:
 	void TestCrash(int laserIdx);
 public:

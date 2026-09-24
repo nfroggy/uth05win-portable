@@ -1,4 +1,5 @@
-#include ".\enemy.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "Enemy.h"
 #include "../Stage.h"
 #include "../../Game.h"
 #include "../Item/Item.h"
@@ -37,7 +38,7 @@ void CEnemy::Initialize()
 {
 	memset(m_enemy,0,sizeof(m_enemy));
 	m_pEnemyTableReadPtr=m_pStage->m_pStageRes->m_pStageStd->m_pEnemyTable;
-	m_enemyDropTableIdx=rand()%16;
+	m_enemyDropTableIdx=GameRandom()%16;
 	m_noAddEnemy=false;
 }
 
@@ -71,7 +72,7 @@ void CEnemy::AddEnemy(unsigned char enemyType,unsigned char subType,float enemyX
 			//m_enemy[i].idx30=0;
 			m_enemy[i].bTakeDamage=false;
 			m_enemy[i].bCrashChara=false;
-			m_enemy[i].autoShootTimer=rand()%256;
+			m_enemy[i].autoShootTimer=GameRandom()%256;
 			m_enemy[i].autoShootInterval=128;
 			m_enemy[i].shootInfo.shootType=EST15_DEFAULT_SINGLE_TO_CHARA;
 			m_enemy[i].shootInfo.bulletBornType=0;
@@ -129,8 +130,8 @@ void CEnemy::StepEnemyTable()
 //			printf("%d %d %d\n",enemyType,xInt,yInt);
 			float x=(float)xInt;
 			float y=(float)yInt;
-			if (xInt==999*16) x=(float)(rand()%(384*16));
-			if (yInt==999*16) y=(float)(rand()%(368*16));
+			if (xInt==999*16) x=(float)(GameRandom()%(384*16));
+			if (yInt==999*16) y=(float)(GameRandom()%(368*16));
 			unsigned char dropItemType=m_pEnemyTableReadPtr[5];
 			unsigned char enemySubType=m_pEnemyTableReadPtr[6];
 			if (!m_noAddEnemy)
@@ -293,7 +294,7 @@ void CEnemy::StepEnemyScript(ENEMY *pEnemy)
 			ptr+=2;
 			break;
 		case 16:
-			pEnemy->curAngle=(float)(rand()%256);
+			pEnemy->curAngle=(float)(GameRandom()%256);
 			UpdateVelXYFromSpeedAngle(pEnemy);
 			ptr+=1;
 			break;
@@ -345,7 +346,7 @@ void CEnemy::StepEnemyScript(ENEMY *pEnemy)
 			ptr+=2;
 			break;
 		case 23:
-			pEnemy->shootInfo.shootAngle=(float)(rand()%256);
+			pEnemy->shootInfo.shootAngle=(float)(GameRandom()%256);
 			ptr++;
 			break;
 		case 24:

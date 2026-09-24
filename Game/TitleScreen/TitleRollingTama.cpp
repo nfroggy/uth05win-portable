@@ -1,4 +1,4 @@
-#include ".\titlerollingtama.h"
+#include "TitleRollingTama.h"
 #include "../../gameLib/CommonFunction/CommonFunctionGraphic.h"
 #include "../Game.h"
 

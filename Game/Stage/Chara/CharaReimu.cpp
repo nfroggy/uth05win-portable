@@ -1,4 +1,5 @@
-#include ".\charareimu.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "CharaReimu.h"
 #include "../Stage.h"
 #include "../Circle/Circle.h"
 #include "../CharaBullet/CharaBullet.h"
@@ -36,15 +37,15 @@ void CCharaReimu::StepBomb()
 			//a bug in the PC98 ver cause the records not be properly initialized, fixed here
 			for (int i=0;i<REIMU_BOMB_ANI_N_RECORD;i++)
 			{
-				m_bombAni[i].x[0]=(float)(rand()%5120+512);
-				m_bombAni[i].y[0]=(float)(rand()%5888);
+				m_bombAni[i].x[0]=(float)(GameRandom()%5120+512);
+				m_bombAni[i].y[0]=(float)(GameRandom()%5888);
 				for (int j=1;j<8;j++)
 				{
 					m_bombAni[i].x[j]=m_bombAni[i].x[0];
 					m_bombAni[i].y[j]=m_bombAni[i].y[0];
 				}
-				float speed=(float)(160+rand()%128);
-				float angle=(float)(40+rand()%48);	//the range is not horizontally symmetric, same as PC98 ver
+				float speed=(float)(160+GameRandom()%128);
+				float angle=(float)(40+GameRandom()%48);	//the range is not horizontally symmetric, same as PC98 ver
 				m_bombAni[i].velX=(float)(cos(angle/256.0f*2*PI)*speed);
 				m_bombAni[i].velY=(float)(sin(angle/256.0f*2*PI)*speed);
 			}
@@ -156,7 +157,7 @@ void CCharaReimu::ShootBullet()
 			GetCharaBullet()->AddBullet(m_curX-24.0f*16.0f,m_curY,22,CHARA_BULLET_TYPE_HOMING,0,0,184,4);
 		}
 		if (m_charaShootTimer%6==0)
-			GetCharaBullet()->AddBullet(m_curX,m_curY,20,CHARA_BULLET_TYPE_NORMAL,0,0,184+(float)(rand()%16),10);
+			GetCharaBullet()->AddBullet(m_curX,m_curY,20,CHARA_BULLET_TYPE_NORMAL,0,0,184+(float)(GameRandom()%16),10);
 	    break;
 	case 3:
 		if (m_charaShootTimer%18==0)
@@ -188,9 +189,9 @@ void CCharaReimu::ShootBullet()
 		if (m_charaShootTimer%9==0)
 		{
 			GetCharaBullet()->AddBullet(m_curX+24.0f*16.0f,m_curY,22,CHARA_BULLET_TYPE_HOMING,0,0,
-										198+(float)(rand()%4),3);
+										198+(float)(GameRandom()%4),3);
 			GetCharaBullet()->AddBullet(m_curX-24.0f*16.0f,m_curY,22,CHARA_BULLET_TYPE_HOMING,0,0,
-										182+(float)(rand()%4),3);
+										182+(float)(GameRandom()%4),3);
 		}
 		if (m_charaShootTimer%6==0)
 		{
@@ -203,9 +204,9 @@ void CCharaReimu::ShootBullet()
 		if (m_charaShootTimer%9==0)
 		{
 			GetCharaBullet()->AddBullet(m_curX+24.0f*16.0f,m_curY,22,CHARA_BULLET_TYPE_HOMING,0,0,
-										198+(float)(rand()%4),3);
+										198+(float)(GameRandom()%4),3);
 			GetCharaBullet()->AddBullet(m_curX-24.0f*16.0f,m_curY,22,CHARA_BULLET_TYPE_HOMING,0,0,
-										182+(float)(rand()%4),3);
+										182+(float)(GameRandom()%4),3);
 		}
 		if (m_charaShootTimer%6==0)
 		{
@@ -220,9 +221,9 @@ void CCharaReimu::ShootBullet()
 		if (m_charaShootTimer%6==0)
 		{
 			GetCharaBullet()->AddBullet(m_curX+24.0f*16.0f,m_curY,22,CHARA_BULLET_TYPE_HOMING,0,0,
-										198+(float)(rand()%4),3);
+										198+(float)(GameRandom()%4),3);
 			GetCharaBullet()->AddBullet(m_curX-24.0f*16.0f,m_curY,22,CHARA_BULLET_TYPE_HOMING,0,0,
-										182+(float)(rand()%4),3);
+										182+(float)(GameRandom()%4),3);
 			GetCharaBullet()->AddBullet(m_curX,m_curY,20,CHARA_BULLET_TYPE_NORMAL,0,0,182,9);
 			GetCharaBullet()->AddBullet(m_curX,m_curY,20,CHARA_BULLET_TYPE_NORMAL,0,0,187,9);
 			GetCharaBullet()->AddBullet(m_curX,m_curY,20,CHARA_BULLET_TYPE_NORMAL,0,0,192,9);

@@ -1,4 +1,4 @@
-#include ".\selectreplayscreen.h"
+#include "SelectReplayScreen.h"
 #include "../Game.h"
 #include "../../gameLib/CommonFunction/CommonFunctionInput.h"
 #include "../../gameLib/CommonFunction/CommonFunctionGraphic.h"
@@ -7,8 +7,7 @@
 #include "../../gameLib/Graphic/Th5ExtFont.h"
 #include <time.h>
 #include <math.h>
-#include <shlwapi.h>
-#include <tchar.h>
+#include <filesystem>
 #define PI 3.1415926535897932384626433832795
 
 namespace th5w{
@@ -37,11 +36,9 @@ CSelectReplayScreen::~CSelectReplayScreen(void)
 void CSelectReplayScreen::Initialize(bool bLoadMode,bool bSwitchMusic)
 {
 	//make sure replay sub directory exists
-	TCHAR subdir[1000];
-	wsprintf(subdir,_T("%S%S\\"),CGame::GVar().m_workingPath,
-								 CGame::GVar().m_replaySubDir);
-	if (::PathFileExists(subdir)==FALSE)
-		::CreateDirectory(subdir,NULL);
+    std::error_code error;
+    std::filesystem::create_directories(
+        std::filesystem::path(CGame::GVar().m_workingPath) / CGame::GVar().m_replaySubDir, error);
 
 	m_curFrame=0;
 	m_lastKeyState=0;
@@ -86,7 +83,7 @@ void CSelectReplayScreen::SwitchPage(int pageIdx)
 	{
 		int fileIdx=m_curPage*m_nFilePerPage+i;
 		char repFileName[1000];
-		sprintf(repFileName,"%s%s\\replay%02d.rpy",CGame::GVar().m_workingPath,
+		sprintf(repFileName,"%s%s/replay%02d.rpy",CGame::GVar().m_workingPath,
 												   CGame::GVar().m_replaySubDir,
 												   fileIdx);
 		m_bCurPageRepFileExist[i]=CReplay::GetRepFileInfo(&m_repInfo[i],repFileName);
@@ -138,7 +135,7 @@ void CSelectReplayScreen::StepEnterNameMode()
 		{
 			memcpy(CGame::GVar().m_replay.m_playerName,m_curEnterName,8);
 			char repFileName[1000];
-			sprintf(repFileName,"%s%s\\replay%02d.rpy",CGame::GVar().m_workingPath,
+			sprintf(repFileName,"%s%s/replay%02d.rpy",CGame::GVar().m_workingPath,
 													   CGame::GVar().m_replaySubDir,
 													   m_curPage*m_nFilePerPage+m_selectedSlot);
 			CGame::GVar().m_replay.SaveFile(repFileName);
@@ -263,7 +260,7 @@ int CSelectReplayScreen::Step()
 			{
 				int fileIdx=m_curPage*m_nFilePerPage+m_curCursorPos;
 				char repFileName[1000];
-				sprintf(repFileName,"%s%s\\replay%02d.rpy",CGame::GVar().m_workingPath,
+				sprintf(repFileName,"%s%s/replay%02d.rpy",CGame::GVar().m_workingPath,
 														   CGame::GVar().m_replaySubDir,
 														   fileIdx);
 				if (CGame::GVar().m_replay.LoadFile(repFileName))

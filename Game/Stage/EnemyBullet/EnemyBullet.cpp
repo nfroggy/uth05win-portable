@@ -1,4 +1,5 @@
-#include ".\enemybullet.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "EnemyBullet.h"
 #include "../Stage.h"
 #include "../Chara/Chara.h"
 #include "../FloatingText/FloatingText.h"
@@ -252,8 +253,8 @@ void CEnemyBullet::FillRecordSpeedAndAngle(int *freeRecIdx,ENEMY_SHOOT_INFO *sho
 		{
 			if (freeRecIdx[i]==-1)
 				return;
-			m_bullets[freeRecIdx[i]].curAngle=(float)(rand()%256);
-			m_bullets[freeRecIdx[i]].curSpeed=shootInfo->bulletSpeed+(bRandSpeed?(float)(rand()%32):0);
+			m_bullets[freeRecIdx[i]].curAngle=(float)(GameRandom()%256);
+			m_bullets[freeRecIdx[i]].curSpeed=shootInfo->bulletSpeed+(bRandSpeed?(float)(GameRandom()%32):0);
 		}
 		return;
 	}

@@ -1,4 +1,5 @@
-#include ".\charabullet.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "CharaBullet.h"
 #include "../Stage.h"
 #include "../EnemyBullet/EnemyBullet.h"
 #include "../SparkEffect/SparkEffect.h"
@@ -222,7 +223,7 @@ int CCharaBullet::GetDamage(float ctrX,float ctrY,float halfWidth,float halfHeig
 						{
 							shootInfo.shootOrigX=m_bullets[i].curX;
 							shootInfo.shootOrigY=m_bullets[i].curY;
-							shootInfo.shootAngle=(float)(rand()%256);
+							shootInfo.shootAngle=(float)(GameRandom()%256);
 							m_pStage->m_pEnemyBullet->Shoot(&shootInfo);
 						}
 					}

@@ -1,4 +1,4 @@
-#include ".\item.h"
+#include "Item.h"
 #include "../Stage.h"
 #include "../Chara/Chara.h"
 #include <string.h>

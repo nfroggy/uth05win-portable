@@ -14,8 +14,8 @@ protected:
 	int m_curFrame;
 
 public:
-	__forceinline void Run() {m_bRunning=true;}
-	__forceinline void Stop() {m_bRunning=false;}
+	inline void Run() {m_bRunning=true;}
+	inline void Stop() {m_bRunning=false;}
 	void Initialize();
 	void Step();
 	void Draw();

@@ -1,5 +1,5 @@
 #pragma once
-#include "../scheme.h"
+#include "../Scheme.h"
 #include "../../gameLib/Graphic/2DImageArray.h"
 #include "../Replay.h"
 

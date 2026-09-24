@@ -1,5 +1,5 @@
 #pragma once
-#include "chara.h"
+#include "Chara.h"
 #define REIMU_BOMB_ANI_N_RECORD 6
 
 namespace th5w{

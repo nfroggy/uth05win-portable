@@ -1,6 +1,5 @@
 #pragma once
-#include <windows.h>
-#include "../scheme.h"
+#include "../Scheme.h"
 #include "../../gameLib/CommonFunction/CommonFunctionGraphic.h"
 #include "OpParticle.h"
 

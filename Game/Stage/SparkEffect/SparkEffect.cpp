@@ -1,4 +1,5 @@
-#include ".\sparkeffect.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "SparkEffect.h"
 #include "../Stage.h"
 #include <string.h>
 #include <math.h>
@@ -47,8 +48,8 @@ void CSparkEffect::AddEffect(float origX,float origY,float baseSpeed,int nTrail,
 		}
 		else
 		{
-			m_spark[i].angle=(float)(rand()%256);
-			speed=baseSpeed+(float)(rand()%32);
+			m_spark[i].angle=(float)(GameRandom()%256);
+			speed=baseSpeed+(float)(GameRandom()%32);
 		}
 		m_spark[i].velX=(float)cos((m_spark[i].angle/256.0f*2*PI))*speed;
 		m_spark[i].velY=(float)sin((m_spark[i].angle/256.0f*2*PI))*speed;

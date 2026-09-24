@@ -1,6 +1,7 @@
-#include ".\midbossstageex.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "MidBossStageEx.h"
 #include "../Stage.h"
-#include "../../game.h"
+#include "../../Game.h"
 
 namespace th5w{
 
@@ -29,8 +30,8 @@ int CMidBossStageEx::ShootType1()
 {
 	if (m_curPhaseFrame==94)
 	{
-		m_shootType1DeltaAngle=(float)(rand()%2*2-1);
-		m_shootType1Angle=(float)(rand()%256);
+		m_shootType1DeltaAngle=(float)(GameRandom()%2*2-1);
+		m_shootType1Angle=(float)(GameRandom()%256);
 	}
 	if (m_curPhaseFrame<=114)
 	{

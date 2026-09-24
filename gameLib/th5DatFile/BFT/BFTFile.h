@@ -23,9 +23,9 @@ protected:
 	bool ParseHeader();
 
 public:
-	__forceinline int NPattern() {return m_nFile;}
-	__forceinline int GetWidth() {return m_width;}
-	__forceinline int GetHeight() {return m_height;}
+	inline int NPattern() {return m_nFile;}
+	inline int GetWidth() {return m_width;}
+	inline int GetHeight() {return m_height;}
 	bool ExtractImageAndPalette(unsigned char *outImage, unsigned char *outPalette,int recordIdx,unsigned char *inPalette,int transparentColorIdx);
 
 public:

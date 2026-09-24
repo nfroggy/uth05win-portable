@@ -36,8 +36,8 @@ protected:
 	bool ParseHeader();
 
 public:
-	__forceinline int GetWidth() {return m_width;}
-	__forceinline int GetHeight() {return m_height;}
+	inline int GetWidth() {return m_width;}
+	inline int GetHeight() {return m_height;}
 public:
 	bool ExtractImageAndPalette(unsigned char *outImage, unsigned char *outPalette,
 								unsigned char *inPalette, unsigned char transparentColorIdx=-1);

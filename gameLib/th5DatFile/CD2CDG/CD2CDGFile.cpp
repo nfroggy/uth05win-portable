@@ -1,4 +1,4 @@
-#include ".\cd2cdgfile.h"
+#include "CD2CDGFile.h"
 #include <stdio.h>
 
 #define CD2CDG_FORMAT_MASK_ONLY 2

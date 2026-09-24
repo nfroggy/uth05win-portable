@@ -1,71 +1,52 @@
-The following text was taken from the original author Pegasy
+# Touhou 5: Mystic Square — SDL3 port
 
-Introduction
-============
-This is an unofficial port of the game Touhou Kaikidan: Mystic Square (the fifth game of the touhou series, referred to as th05 below) to windows. It faithfully reproduces almost all features of the original PC98 version. Check "Comparison" section for the details
+I wanted to play Pegasy's Windows port of Touhou 5 on Linux, so I had Chatgpt Codex port it to SDL3. It seems to work well so I decided to put it on Github in case someone else finds this useful.
 
-Usage
-=====
-1. Extract all files into a folder.
-2. Download glew from http://glew.sourceforge.net/ (download the binaries) and extract glew32.dll into the same folder.
-3. Download PMDWin from http://c60.fmp.jp/ and extract PMDWin.dll into the same folder.
-4. (Optional) Put anex86.bmp into the same foldeer. (google it to find out how to get this file)
-5. Put 怪綺談1.dat, 怪綺談2.dat and ZUN.com from the orignal PC98 version into the same folder (these files may have different names depending on you system's code page, for example, 夦鉟択1.dat in chinese code page)
-  5.1 If you only have an .hdi file that contains the original game, you can:
-    5.1.1 Download anex86 (google it to find the download link)
-    5.1.2 Use anxdiet that is included in anex86 to open the .hdi file
-    5.1.3 Drag the three need files to the destination folder
-6. Rename 怪綺談1.dat to kaiki1.dat, 怪綺談2.dat to kaiki2.dat.
-7. Run uth05win.exe.
+## How to build
 
-To start the game without translation, open config.ini and comment the line with "MOD_FILE = chs.dat"
+On Fedora:
 
-Comparison
-==========
-New features in this ported version:
- * replay support
- * translated into chinese (can be turned off)
- * fixed a number of bugs in the PC98 version
- * uses float instead of int where necessary, increasing accuracy
+```sh
+sudo dnf install gcc-c++ cmake ninja-build git SDL3-devel libglvnd-devel mesa-libGLU-devel freetype-devel fontconfig-devel
+```
 
-Features not ported in this version:
- * Music room
- * demo play
- * staff roll
- * player performance evaluation
- * some options
+From the repository root:
 
-Controls
-========
-Similar to other games of touhou series:
-  Z      Shoot
-  X      Bomb
-  Shift  Slow move
-  Ctrl   skip dialog
-  ESC    Menu
+```sh
+git submodule update --init --recursive
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+```
 
-To toggle fullscreen mode, press alt + enter.
+## Game data
 
-Game pad is not supported.
+From the PC98 game:
 
-Known bugs
-==========
-When you switch to/from full screen mode, the font texture may become corrupted.
+- `kaiki1.dat` (renamed from 怪綺談1.dat)
+- `kaiki2.dat` (renamed from 怪綺談2.dat)
+- `zun.com` (lowercase filename on Linux)
 
-Copyright
-=========
-1999 Team Shanghai Alice
-2011 Pegasy
-This program is in the public domain.
+The `SE/`, `practice.bmp`, `replay.bmp`, and configuration files from this repo should be in the same directory as the data files. `anex86.bmp` is optional; when absent, FreeType and Fontconfig provide system fonts.
 
-The assets and libraries it uses belongs to their authors. Check their webpage for copyright information
+To run from another directory:
 
-This program uses:
-* assets from th05 (http://www.kt.rim.or.jp/~aotaka/am/index.htm)
-* The OpenGL Extension Wrangler Library (http://glew.sourceforge.net/)
-* PMDWin (http://c60.fmp.jp/)
+```sh
+/path/to/build/uth05win --data-dir /path/to/game-data
+```
 
+Configuration, high scores, and replays are saved in the game data directory,
+which must be writable. The included Chinese translation is selected by
+`MOD_FILE = chs.dat` in `config.ini`. Comment out that line with `//` to use the
+original Japanese text. Startup errors are printed to the terminal.
 
-Misc
-====
-For bug report and feature request, please contact the one you received this program from:)
+## Controls
+
+| Key | Action |
+| --- | --- |
+| Arrow keys | Move / navigate menus |
+| Z | Shoot / confirm |
+| X | Bomb / cancel |
+| Left Shift | Move slowly |
+| Left Ctrl | Skip dialogue / fast-forward replays |
+| Esc | Pause menu |
+| Alt + Enter | Toggle fullscreen |

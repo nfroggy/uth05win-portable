@@ -1,4 +1,4 @@
-#include ".\pifile.h"
+#include "PIFile.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -116,7 +116,7 @@ bool CPIFile::ExtractImageAndPalette(unsigned char *outImage, unsigned char *out
 
 	Decode();
 
-	delete bitstream;
+	delete[] bitstream;
 
 	unsigned char *palette;
 	if (m_bHasPalette)
@@ -146,7 +146,7 @@ bool CPIFile::ExtractImageAndPalette(unsigned char *outImage, unsigned char *out
 			outImage[j*4+3]=255;
 	}
 
-	delete bmpbuf;
+	delete[] bmpbuf;
 
 	return true;
 }

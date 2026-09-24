@@ -1,4 +1,4 @@
-#include ".\floatingtext.h"
+#include "FloatingText.h"
 #include "../../../gameLib/Graphic/Th5ExtFont.h"
 #include "../Stage.h"
 #include <string.h>

@@ -1,7 +1,7 @@
-#include ".\midbossstage3.h"
+#include "MidBossStage3.h"
 #include <stdlib.h>
 #include "../Stage.h"
-#include "../../game.h"
+#include "../../Game.h"
 
 namespace th5w{
 

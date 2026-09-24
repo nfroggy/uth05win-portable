@@ -1,4 +1,4 @@
-#include ".\curvingbullet.h"
+#include "CurvingBullet.h"
 #include "../Stage.h"
 #include "../Chara/Chara.h"
 

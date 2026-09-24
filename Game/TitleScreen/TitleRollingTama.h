@@ -1,5 +1,4 @@
 #pragma once
-#include <windows.h>
 #include "../../gameLib/Graphic/2DImage.h"
 
 namespace th5w{

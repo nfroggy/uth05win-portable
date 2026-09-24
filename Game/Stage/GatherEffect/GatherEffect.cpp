@@ -1,4 +1,4 @@
-#include ".\gathereffect.h"
+#include "GatherEffect.h"
 #include <string.h>
 #include "../Stage.h"
 #ifndef PI

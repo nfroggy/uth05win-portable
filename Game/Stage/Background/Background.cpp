@@ -1,4 +1,4 @@
-#include ".\background.h"
+#include "Background.h"
 #include "../Stage.h"
 #include "../../Game.h"
 
@@ -14,7 +14,7 @@ CBackground::CBackground(CStage *pStage)
 CBackground::~CBackground(void)
 {
 	if (m_mapTileIdxArray)
-		delete m_mapTileIdxArray;
+		delete[] m_mapTileIdxArray;
 	m_mapTileIdxArray=NULL;
 }
 

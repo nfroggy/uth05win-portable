@@ -1,4 +1,4 @@
-#include ".\textoverlay.h"
+#include "TextOverlay.h"
 #include "../Stage.h"
 #include "../../../gameLib/Graphic/Th5ExtFont.h"
 #include "../../../gameLib/Graphic/PC98Font.h"

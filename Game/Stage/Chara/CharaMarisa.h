@@ -1,5 +1,5 @@
 #pragma once
-#include "chara.h"
+#include "Chara.h"
 #define MARISA_BOMB_ANI_N_RECORD 8
 
 namespace th5w{

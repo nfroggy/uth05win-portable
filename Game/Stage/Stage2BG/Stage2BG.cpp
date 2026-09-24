@@ -1,4 +1,5 @@
-#include ".\stage2bg.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "Stage2BG.h"
 #include "../Stage.h"
 #include "../Boss/Boss.h"
 #include "../Background/Background.h"
@@ -32,51 +33,51 @@ void CStage2BG::RegenerateSprite(int recordIdx)
 	int idx=m_pStage->m_curFrame%4096;
 	if (idx<1000)
 	{
-		m_bgSprite[recordIdx].angle=(float)(rand()%32+48);
+		m_bgSprite[recordIdx].angle=(float)(GameRandom()%32+48);
 		m_bgSprite[recordIdx].curX=(80-m_bgSprite[recordIdx].angle)*128+1024;
 	}
 	else
 		if (idx<1128)
 		{
-			m_bgSprite[recordIdx].angle=(float)((idx-1000)/8+48+rand()%32);
+			m_bgSprite[recordIdx].angle=(float)((idx-1000)/8+48+GameRandom()%32);
 			m_bgSprite[recordIdx].curX=(float)((80-m_bgSprite[recordIdx].angle)*128+1024+(idx-1000)*24);
 		}
 		else
 			if (idx<2000)
 			{
-				m_bgSprite[recordIdx].angle=(float)(rand()%32+64);
+				m_bgSprite[recordIdx].angle=(float)(GameRandom()%32+64);
 				m_bgSprite[recordIdx].curX=(96-m_bgSprite[recordIdx].angle)*128+2048;
 			}
 			else
 				if (idx<2128)
 				{
-					m_bgSprite[recordIdx].angle=(float)(64-(idx-2000)/8+rand()%32);
+					m_bgSprite[recordIdx].angle=(float)(64-(idx-2000)/8+GameRandom()%32);
 					m_bgSprite[recordIdx].curX=(float)((96-m_bgSprite[recordIdx].angle)*128+2048-(idx-2000)*24);
 				}
 				else
 					if (idx<3000)
 					{
-						m_bgSprite[recordIdx].angle=(float)(rand()%32+48);
+						m_bgSprite[recordIdx].angle=(float)(GameRandom()%32+48);
 						m_bgSprite[recordIdx].curX=(80-m_bgSprite[recordIdx].angle)*128+1024;
 					}
 					else
 						if (idx<3128)
 						{
-							m_bgSprite[recordIdx].angle=(float)(48-(idx-3000)/8+rand()%32);
+							m_bgSprite[recordIdx].angle=(float)(48-(idx-3000)/8+GameRandom()%32);
 							m_bgSprite[recordIdx].curX=(float)((80-m_bgSprite[recordIdx].angle)*128+1024-(idx-3000)*24);
 						}
 						else
 							if (idx<3968)
 							{
-								m_bgSprite[recordIdx].angle=(float)(rand()%32+32);
+								m_bgSprite[recordIdx].angle=(float)(GameRandom()%32+32);
 								m_bgSprite[recordIdx].curX=(64-m_bgSprite[recordIdx].angle)*128;
 							}
 							else
 							{
-								m_bgSprite[recordIdx].angle=(float)((idx-3968)/8+32+rand()%32);
+								m_bgSprite[recordIdx].angle=(float)((idx-3968)/8+32+GameRandom()%32);
 								m_bgSprite[recordIdx].curX=(float)((64-m_bgSprite[recordIdx].angle)*128+(idx-3968)*24);
 							}
-	m_bgSprite[recordIdx].curX+=rand()%8*16;
+	m_bgSprite[recordIdx].curX+=GameRandom()%8*16;
 	m_bgSprite[recordIdx].age=8;
 	m_bgSprite[recordIdx].curY=0;
 	m_bgSprite[recordIdx].velX=(float)cos(m_bgSprite[recordIdx].angle/256.0f*2*PI)*128.0f;
@@ -88,7 +89,7 @@ void CStage2BG::StepSprites()
 	if (m_nSprite<64&&m_pStage->m_curFrame%2==0)
 	{
 		m_bgSprite[m_nSprite].flag=1;
-		m_bgSprite[m_nSprite].angle=(float)(rand()%32+48);
+		m_bgSprite[m_nSprite].angle=(float)(GameRandom()%32+48);
 		m_bgSprite[m_nSprite].curX=(80-m_bgSprite[m_nSprite].angle)*128+1024;
 		m_bgSprite[m_nSprite].curY=0;
 		m_bgSprite[m_nSprite].velX=(float)cos(m_bgSprite[m_nSprite].angle/256.0f*2*PI)*128.0f;

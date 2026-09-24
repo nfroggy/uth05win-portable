@@ -1,4 +1,5 @@
-#include ".\charamarisa.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "CharaMarisa.h"
 #include "../Stage.h"
 #include "../SparkEffect/SparkEffect.h"
 #include "../CharaBullet/CharaBullet.h"
@@ -152,7 +153,7 @@ void CCharaMarisa::ShootBullet()
 										ADD_CHARA_BULLET_IGNORE_MOVEANGLE,16);
 		}
 		if (m_charaShootTimer%6==0)
-			GetCharaBullet()->AddBullet(m_curX,m_curY,20,CHARA_BULLET_TYPE_NORMAL,0,0,184+(float)(rand()%16),8);
+			GetCharaBullet()->AddBullet(m_curX,m_curY,20,CHARA_BULLET_TYPE_NORMAL,0,0,184+(float)(GameRandom()%16),8);
 	    break;
 	case 3:
 		if (m_charaShootTimer%18==0)

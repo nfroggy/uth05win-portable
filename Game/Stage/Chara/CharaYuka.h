@@ -1,5 +1,5 @@
 #pragma once
-#include "chara.h"
+#include "Chara.h"
 
 namespace th5w{
 

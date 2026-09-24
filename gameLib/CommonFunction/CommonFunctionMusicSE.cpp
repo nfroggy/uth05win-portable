@@ -1,4 +1,4 @@
-#include ".\commonfunctionmusicse.h"
+#include "CommonFunctionMusicSE.h"
 
 namespace th5w{
 

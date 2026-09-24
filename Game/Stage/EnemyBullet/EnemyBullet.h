@@ -110,8 +110,8 @@ public:
 	void Draw();
 	void TuneEnemyShootInfo(ENEMY_SHOOT_INFO *pInfo);
 
-	__forceinline int GetClearBulletTimeLeft() {return m_clearEnemyBulletTimeLeft;}
-	__forceinline void SetClearBulletTimeLeft(int timeLeft)
+	inline int GetClearBulletTimeLeft() {return m_clearEnemyBulletTimeLeft;}
+	inline void SetClearBulletTimeLeft(int timeLeft)
 	{
 		if (m_clearEnemyBulletTimeLeft<timeLeft)
 			m_clearEnemyBulletTimeLeft=timeLeft;
@@ -125,7 +125,7 @@ protected:
 public:
 	static unsigned char AdjustBulletImageBasedOnAngle(unsigned char curImgIdx,float angle);
 
-	__forceinline void UpdateVelXYFromSpeedAngle(int recordIdx)
+	inline void UpdateVelXYFromSpeedAngle(int recordIdx)
 	{
 		m_bullets[recordIdx].velX=(float)cos(m_bullets[recordIdx].curAngle/256.0*2*PI)*m_bullets[recordIdx].curSpeed;
 		m_bullets[recordIdx].velY=(float)sin(m_bullets[recordIdx].curAngle/256.0*2*PI)*m_bullets[recordIdx].curSpeed;

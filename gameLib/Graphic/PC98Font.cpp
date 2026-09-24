@@ -1,110 +1,149 @@
-#include ".\pc98font.h"
-#include <tchar.h>
+#include "PC98Font.h"
 #include "../../Game/Game.h"
-#include <atlimage.h>
+#include <fontconfig/fontconfig.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include <iconv.h>
+#include <array>
+#include <map>
+#include <vector>
+#include <algorithm>
 
-namespace th5w{
+namespace th5w {
+bool CPC98Font::s_bFontLoaded = false;
+GLuint CPC98Font::s_fontTex = 0;
+namespace {
+FT_Library library = nullptr;
+FT_Face face = nullptr;
+std::map<unsigned int, GLuint> glyphs;
+iconv_t converter = (iconv_t)-1;
 
-bool CPC98Font::s_bFontLoaded=false;
-GLuint CPC98Font::s_fontTex=0;
-
-bool CPC98Font::s_bCacheInited=false;
-int CPC98Font::s_curCacheWriteIdx;
-int CPC98Font::s_charIdxInCache[65536];
-int CPC98Font::s_cacheList[200];
-GLuint CPC98Font::s_displayListBase;
-
-GLuint CPC98Font::s_CommonCharTex=0;
-
-CPC98Font::CPC98Font(void)
+GLuint Glyph(unsigned int codepoint, int width)
 {
+    const unsigned int key = codepoint * 2 + (width == 16);
+    auto found = glyphs.find(key);
+    if (found != glyphs.end()) return found->second;
+    std::array<unsigned char, 16*16*2> pixels{};
+    if (FT_Load_Char(face, codepoint, FT_LOAD_RENDER | FT_LOAD_TARGET_MONO) == 0) {
+        const auto &bitmap = face->glyph->bitmap;
+        for (int y = 0; y < int(bitmap.rows); ++y) {
+            const int dy = 13 - face->glyph->bitmap_top + y;
+            if (dy < 0 || dy >= 16) continue;
+            for (int x = 0; x < int(bitmap.width); ++x) {
+                const int dx = face->glyph->bitmap_left + x;
+                if (dx < 0 || dx >= width) continue;
+                const auto *row = bitmap.buffer + y * bitmap.pitch;
+                const unsigned char alpha = bitmap.pixel_mode == FT_PIXEL_MODE_MONO
+                    ? ((row[x / 8] & (0x80 >> (x % 8))) ? 255 : 0) : row[x];
+                pixels[((15-dy)*16+dx)*2] = 255;
+                pixels[((15-dy)*16+dx)*2+1] = alpha;
+            }
+        }
+    }
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, 16, 16, 0,
+                 GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, pixels.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glyphs.emplace(key, texture);
+    return texture;
 }
-
-CPC98Font::~CPC98Font(void)
+bool LeadByte(unsigned char c)
 {
+    if (CGame::GVar().m_textCodePage == 932)
+        return (c >= 0x81 && c <= 0x9f) || (c >= 0xe0 && c <= 0xfc);
+    return c >= 0x81 && c <= 0xfe;
 }
-
-bool CPC98Font::LoadAnex86BMP(const char *fileName)
+unsigned int Unicode(char *text, int length)
 {
-	CImage fontImg;
-	TCHAR fileNameBuf[1000];
-	wsprintf(fileNameBuf,_T("%S"),fileName);
-	if (fontImg.Load(fileNameBuf)!=0)
-		return false;
-	if (fontImg.GetBPP()!=1)
-		return false;
-	if (fontImg.GetWidth()!=2048)
-		return false;
-	if (fontImg.GetHeight()!=2048)
-		return false;
-
-	unsigned char *pData=(unsigned char *)fontImg.GetBits();
-	pData+=fontImg.GetPitch()*(fontImg.GetHeight()-1);			//move to last line
-
-	unsigned char *texImage=new unsigned char[2048*2048*2];
-	if (texImage==NULL)
-		return false;
-
-	unsigned char *pWrite=texImage;
-	for (int i=0;i<fontImg.GetHeight();i++)
-	{
-		for (int j=0;j<fontImg.GetWidth();j++,pWrite+=2)
-			(*pWrite)=(*(pWrite+1))=((pData[j/8]&(1<<(7-j%8)))==0)?255:0;
-		pData-=fontImg.GetPitch();
-	}
-
-	glGenTextures(1,&s_fontTex);
-	glBindTexture(GL_TEXTURE_2D,s_fontTex);
-	glTexImage2D(GL_TEXTURE_2D,0,GL_LUMINANCE4_ALPHA4,fontImg.GetWidth(),fontImg.GetHeight(),0,GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE,texImage);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
-
-	delete texImage;
-
-	s_bFontLoaded=true;
-
-	return true;
+    if (converter == (iconv_t)-1) return '?';
+    std::array<unsigned char, 4> result{};
+    char *input = text, *output = reinterpret_cast<char *>(result.data());
+    size_t inSize = length, outSize = result.size();
+    iconv(converter, nullptr, nullptr, nullptr, nullptr);
+    if (iconv(converter, &input, &inSize, &output, &outSize) == size_t(-1)) return '?';
+    return result[0] | (unsigned(result[1]) << 8) | (unsigned(result[2]) << 16) | (unsigned(result[3]) << 24);
+}
 }
 
 bool CPC98Font::CreateTextureForCommonChar()
 {
-	if (s_CommonCharTex!=0)
-		return false;
-
-	glClearColor(0,0,0,0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	for (int i=0;i<16;i++)
-		for (int j=0;j<16;j++)
-		{
-			char str[3];
-			str[0]=i*16+j;
-			str[1]=0;
-			str[2]=0;
-			DrawString(str,100,j*16,i*16,1,1,1,1.0,false);
-		}
-
-	glGenTextures(1,&s_CommonCharTex);
-	glBindTexture(GL_TEXTURE_2D,s_CommonCharTex);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
-	glCopyTexImage2D(GL_TEXTURE_2D,0,GL_LUMINANCE4_ALPHA4,0,0,256,256,0);
-
-	return true;
+    if (face) return true;
+    if (FT_Init_FreeType(&library)) return false;
+    FcPattern *pattern = FcPatternCreate();
+    FcPatternAddString(pattern, FC_FAMILY, reinterpret_cast<const FcChar8 *>("monospace"));
+    FcPatternAddString(pattern, FC_LANG, reinterpret_cast<const FcChar8 *>(
+        CGame::GVar().m_textCodePage == 936 ? "zh-cn" : "ja"));
+    FcConfigSubstitute(nullptr, pattern, FcMatchPattern);
+    FcDefaultSubstitute(pattern);
+    FcResult result;
+    FcPattern *match = FcFontMatch(nullptr, pattern, &result);
+    FcPatternDestroy(pattern);
+    bool success = false;
+    if (match) {
+        FcChar8 *filename = nullptr;
+        int index = 0;
+        FcPatternGetInteger(match, FC_INDEX, 0, &index);
+        if (FcPatternGetString(match, FC_FILE, 0, &filename) == FcResultMatch)
+            success = FT_New_Face(library, reinterpret_cast<char *>(filename), index, &face) == 0;
+        FcPatternDestroy(match);
+    }
+    if (!success || FT_Set_Pixel_Sizes(face, 0, 16)) return false;
+    char encoding[32];
+    snprintf(encoding, sizeof(encoding), "CP%d", CGame::GVar().m_textCodePage);
+    converter = iconv_open("UTF-32LE", encoding);
+    return converter != (iconv_t)-1;
 }
-
 void CPC98Font::DestroyTextureForCommonChar()
 {
-	if (s_CommonCharTex!=0)
-	{
-		glDeleteTextures(1,&s_CommonCharTex);
-		s_CommonCharTex=0;
-	}
+    for (const auto &glyph : glyphs) glDeleteTextures(1, &glyph.second);
+    glyphs.clear();
+    if (face) FT_Done_Face(face);
+    if (library) FT_Done_FreeType(library);
+    face = nullptr;
+    library = nullptr;
+    if (converter != (iconv_t)-1) iconv_close(converter);
+    converter = (iconv_t)-1;
 }
-
+void CPC98Font::FinalizeCache()
+{
+    if (s_fontTex) glDeleteTextures(1, &s_fontTex);
+    s_fontTex = 0;
+    s_bFontLoaded = false;
+}
+bool CPC98Font::LoadAnex86BMP(const char *filename)
+{
+    SDL_Surface *loaded = SDL_LoadBMP(filename);
+    if (!loaded) return false;
+    SDL_Surface *img = SDL_ConvertSurface(loaded, SDL_PIXELFORMAT_RGB24);
+    SDL_DestroySurface(loaded);
+    if (!img) return false;
+    if (img->w != 2048 || img->h != 2048) { SDL_DestroySurface(img); return false; }
+    std::vector<unsigned char> pixels(2048*2048*2);
+    for (int y = 0; y < 2048; ++y) {
+        auto *row = static_cast<unsigned char *>(img->pixels) + y * img->pitch;
+        for (int x = 0; x < 2048; ++x) {
+            const int index = ((2047-y)*2048+x)*2;
+            pixels[index] = 255;
+            pixels[index+1] = row[x*3] < 128 ? 255 : 0;
+        }
+    }
+    SDL_DestroySurface(img);
+    glGenTextures(1, &s_fontTex);
+    glBindTexture(GL_TEXTURE_2D, s_fontTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, 2048, 2048, 0,
+                 GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, pixels.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    s_bFontLoaded = true;
+    return true;
+}
 int CPC98Font::ConvertCharToTexXY(float *outX,float *outY,unsigned char *str)
 {
 	unsigned char twoBytes[2];
@@ -139,7 +178,7 @@ int CPC98Font::ConvertCharToTexXY(float *outX,float *outY,unsigned char *str)
 	if (twoBytes[1]>=0x9e)				//chars in the second column, although the second column start with 0x9f,
 	{									//we use 0x9e here because we have decremented it by 1 above.
 		charX+=16;
-		twoBytes[1]-=0x9e-0x40;			//also convert the y to be the same for the first column
+		twoBytes[1]-=0x9e - 0x40;			//also convert the y to be the same for the first column
 	}
 	int charY=528+(twoBytes[1]-0x40)*16;
 
@@ -151,182 +190,51 @@ int CPC98Font::ConvertCharToTexXY(float *outX,float *outY,unsigned char *str)
 	return 2;
 }
 
-GLuint CPC98Font::GetDisplayListForChar(int charIdx)
+bool CPC98Font::DrawString(char *str, int nChar, int x, int y, float r, float g, float b,
+                           float fade, bool upperLeft)
 {
-	if (!s_bCacheInited)
-	{
-		memset(s_charIdxInCache,0xff,sizeof(s_charIdxInCache));
-		memset(s_cacheList,0xff,sizeof(s_cacheList));
-		s_curCacheWriteIdx=0;
-		s_displayListBase=glGenLists(sizeof(s_cacheList)/sizeof(int));
-		s_bCacheInited=true;
-	}
-
-	if (s_charIdxInCache[charIdx]==-1)
-	{
-		//printf("new char %d\n",charIdx);
-		wglUseFontBitmaps(wglGetCurrentDC(),charIdx,1,s_displayListBase+s_curCacheWriteIdx);
-		if (s_cacheList[s_curCacheWriteIdx]!=-1)
-		{
-			//printf("refresh cache %d -> %d\n",s_cacheList[s_curCacheWriteIdx],charIdx);
-			s_charIdxInCache[s_cacheList[s_curCacheWriteIdx]]=-1;
-		}
-		s_charIdxInCache[charIdx]=s_curCacheWriteIdx;
-		s_cacheList[s_curCacheWriteIdx]=charIdx;
-		int retIdx=s_curCacheWriteIdx;
-		s_curCacheWriteIdx=(s_curCacheWriteIdx+1)%(sizeof(s_cacheList)/sizeof(int));
-		return s_displayListBase+retIdx;
-	}
-	return s_displayListBase+s_charIdxInCache[charIdx];
+    const bool system = CGame::GVar().m_bUseSystemFont;
+    if ((system && !face) || (!system && !s_bFontLoaded)) return false;
+    if (upperLeft) y = CGame::s_pCurGame->m_windowHeight - y - 16;
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0, CGame::s_pCurGame->m_windowWidth, 0, CGame::s_pCurGame->m_windowHeight);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glColor4f(r, g, b, fade);
+    for (int i = 0; i < nChar && *str; ++i) {
+        int length = LeadByte(static_cast<unsigned char>(*str)) && str[1] ? 2 : 1;
+        float u = 0, v = 0, du, dv;
+        if (system) {
+            glBindTexture(GL_TEXTURE_2D, Glyph(Unicode(str, length), length * 8));
+            du = length * 0.5f;
+            dv = 1;
+        } else {
+            length = ConvertCharToTexXY(&u, &v, reinterpret_cast<unsigned char *>(str));
+            if (!length) break;
+            glBindTexture(GL_TEXTURE_2D, s_fontTex);
+            du = length * 8.f / 2048;
+            dv = 16.f / 2048;
+        }
+        glBegin(GL_QUADS);
+        glTexCoord2f(u, v); glVertex2f(x, y);
+        glTexCoord2f(u+du, v); glVertex2f(x+length*8, y);
+        glTexCoord2f(u+du, v+dv); glVertex2f(x+length*8, y+16);
+        glTexCoord2f(u, v+dv); glVertex2f(x, y+16);
+        glEnd();
+        str += length;
+        x += length * 8;
+    }
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    return true;
 }
-
-void CPC98Font::FinalizeCache()
-{
-	if (s_bCacheInited)
-	{
-		glDeleteLists(s_displayListBase,sizeof(s_cacheList)/sizeof(int));
-		s_bCacheInited=false;
-	}
 }
-
-bool CPC98Font::DrawString(char *str,int nChar,int drawX,int drawY,float colorR,float colorG,
-						   float colorB,float fadeInScale,bool coordIsUpperLeft)
-{
-	if (CGame::GVar().m_bUseSystemFont==false&&s_bFontLoaded==false)
-		return false;
-
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,s_fontTex);
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	gluOrtho2D(0,CGame::s_pCurGame->m_windowWidth,
-			   0,CGame::s_pCurGame->m_windowHeight);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-	glColor4f(colorR,colorG,colorB,fadeInScale);
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-
-	glDisable(GL_DEPTH_TEST);
-
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
-
-	if (coordIsUpperLeft)
-		drawY=CGame::s_pCurGame->m_gameWindow.m_height-1-drawY-(16-1);
-
-	if (CGame::GVar().m_bUseSystemFont)
-	{
-		if (s_CommonCharTex!=0)
-			glBindTexture(GL_TEXTURE_2D,s_CommonCharTex);
-		for (int i=0;i<nChar;i++)
-		{
-			unsigned char *twoBytes=(unsigned char *)str;
-			if (twoBytes[0]==0)
-				break;
-			int charLen;
-			if (IsDBCSLeadByteEx(CGame::GVar().m_textCodePage,twoBytes[0]))
-				charLen=2;
-			else
-				charLen=1;
-
-			if (charLen==1&&s_CommonCharTex!=0)
-			{
-				glEnable(GL_TEXTURE_2D);
-				float texXLow=(float)(twoBytes[0]%16*16)/256.0f;
-				float texYLow=(float)(twoBytes[0]/16*16)/256.0f;
-				float texXHigh=texXLow+8/256.0f;
-				float texYHigh=texYLow+16/256.0f;
-				glBegin(GL_QUADS);
-					glTexCoord2f(texXLow,texYLow);
-					glVertex2f((float)drawX,(float)drawY);
-					glTexCoord2f(texXHigh,texYLow);
-					glVertex2f((float)drawX+charLen*8,(float)drawY);
-					glTexCoord2f(texXHigh,texYHigh);
-					glVertex2f((float)drawX+charLen*8,(float)drawY+16);
-					glTexCoord2f(texXLow,texYHigh);
-					glVertex2f((float)drawX,(float)drawY+16);
-				glEnd();
-			}
-			else
-			{
-				TCHAR tstr[5];
-				memset(tstr,0,sizeof(tstr));
-				MultiByteToWideChar(CGame::GVar().m_textCodePage,0,(char*)twoBytes,charLen,tstr,5);
-				unsigned char *s=(unsigned char *)tstr;
-
-				GLuint dispList=GetDisplayListForChar(s[0]+s[1]*256);
-				//wglUseFontBitmaps(wglGetCurrentDC(),s[0]+s[1]*256,1,dispList);
-
-				glDisable(GL_TEXTURE_2D);
-				glRasterPos2f((float)drawX,(float)drawY+2);
-				glCallList(dispList);
-			}
-
-			str+=charLen;
-			drawX+=charLen*8;
-		}
-		//printf("\n");
-		//glDeleteLists(dispList,1);
-	}
-	else
-	{
-		for (int i=0;i<nChar;i++)
-		{
-			unsigned char *twoBytes=(unsigned char *)str;
-			if (twoBytes[0]==0)
-				break;
-
-			float texXLow;
-			float texYLow;
-			int charLen=ConvertCharToTexXY(&texXLow,&texYLow,twoBytes);
-			if (charLen==0)
-				break;
-			float texXHigh=texXLow+(charLen*8)/2048.0f;
-			float texYHigh=texYLow+(16)/2048.0f;
-
-			glBegin(GL_QUADS);
-				glTexCoord2f(texXLow,texYLow);
-				glVertex2f((float)drawX,(float)drawY);
-				glTexCoord2f(texXHigh,texYLow);
-				glVertex2f((float)drawX+charLen*8,(float)drawY);
-				glTexCoord2f(texXHigh,texYHigh);
-				glVertex2f((float)drawX+charLen*8,(float)drawY+16);
-				glTexCoord2f(texXLow,texYHigh);
-				glVertex2f((float)drawX,(float)drawY+16);
-			glEnd();
-
-			drawX+=charLen*8;
-			str+=charLen;
-		}
-	}
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	return true;
-}
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

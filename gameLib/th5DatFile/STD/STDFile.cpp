@@ -1,4 +1,4 @@
-#include ".\stdfile.h"
+#include "STDFile.h"
 #include <stdio.h>
 #include <string.h>
 

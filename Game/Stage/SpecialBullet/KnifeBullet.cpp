@@ -1,4 +1,4 @@
-#include ".\knifebullet.h"
+#include "KnifeBullet.h"
 #include "../Stage.h"
 #include "../Chara/Chara.h"
 #include "../Circle/Circle.h"

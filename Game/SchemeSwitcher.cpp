@@ -1,10 +1,10 @@
-#include ".\schemeswitcher.h"
+#include "SchemeSwitcher.h"
 #include "OP/Opening.h"
 #include "TitleScreen/TitleScreen.h"
 #include "SelectCharaScreen/SelectCharaScreen.h"
 #include "Stage/Stage.h"
 #include "Game.h"
-#include "ed/Ending.h"
+#include "ED/Ending.h"
 #include "SelectReplayScreen/SelectReplayScreen.h"
 #include "HighScoreScreen/HighScoreScreen.h"
 

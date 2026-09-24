@@ -1,7 +1,7 @@
-#include ".\replay.h"
+#include "Replay.h"
 #include <stdio.h>
 #include <time.h>
-#include "game.h"
+#include "Game.h"
 
 namespace th5w{
 

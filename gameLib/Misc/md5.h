@@ -1,3 +1,4 @@
+#include <cstdint>
 /* MD5.H - header file for MD5C.C
 */
 
@@ -26,8 +27,8 @@ documentation and/or software.
 /* MD5 context. */
 
 typedef struct {
-	unsigned long int state[4];                                   /* state (ABCD) */
-	unsigned long int count[2];        /* number of bits, modulo 2^64 (lsb first) */
+	uint32_t state[4];                                   /* state (ABCD) */
+	uint32_t count[2];        /* number of bits, modulo 2^64 (lsb first) */
 	unsigned char buffer[64];				                     /* input buffer */
 } MD5_CTX;
 

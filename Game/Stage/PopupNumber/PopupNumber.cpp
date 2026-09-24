@@ -1,4 +1,4 @@
-#include ".\popupnumber.h"
+#include "PopupNumber.h"
 #include <string.h>
 #include "../Stage.h"
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "boss.h"
+#include "Boss.h"
 #include "../SpecialBullet/KnifeBullet.h"
 
 namespace th5w{

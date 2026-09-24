@@ -1,25 +1,15 @@
 #pragma once
-
 #include "mygl.h"
+#include <SDL3/SDL.h>
 
-namespace th5w{
-	namespace gl{
-
-class CGLContext
-{
-protected:
-	HWND m_hWnd;
-	HDC m_hDC;
-	HGLRC m_hRC;
-
+namespace th5w::gl {
+class CGLContext {
+    SDL_Window *m_window = nullptr;
+    SDL_GLContext m_context = nullptr;
 public:
-	bool Init(HWND hWnd);
-	bool MakeCurrent();
-	bool SwapBuffers();
-public:
-	CGLContext(void);
-	~CGLContext(void);
+    bool Init(SDL_Window *window);
+    bool MakeCurrent();
+    bool SwapBuffers();
+    ~CGLContext();
 };
-
-	}
 }

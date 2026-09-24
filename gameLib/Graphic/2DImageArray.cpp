@@ -1,5 +1,4 @@
-#include <windows.h>
-#include ".\2dimagearray.h"
+#include "2DImageArray.h"
 
 namespace th5w{
 

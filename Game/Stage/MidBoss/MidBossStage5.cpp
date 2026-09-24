@@ -1,6 +1,7 @@
-#include ".\midbossstage5.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "MidBossStage5.h"
 #include "../Stage.h"
-#include "../../game.h"
+#include "../../Game.h"
 
 namespace th5w{
 
@@ -88,14 +89,14 @@ int CMidBossStage5::Phase1Mode2Shoot()
 	if (m_curPhaseFrame%4==0)
 	{
 		ENEMY_SHOOT_INFO shootInfo;
-		shootInfo.shootOrigX=m_curX+(float)(rand()%(64*16)-32*16);
-		shootInfo.shootOrigY=m_curY+(float)(rand()%(64*16)-32*16);
+		shootInfo.shootOrigX=m_curX+(float)(GameRandom()%(64*16)-32*16);
+		shootInfo.shootOrigY=m_curY+(float)(GameRandom()%(64*16)-32*16);
 		shootInfo.bulletBornType=16;
 		shootInfo.bulletImg=68;
 		shootInfo.bulletSpeed=32;
 		shootInfo.shootType=EST04_NWAY_ALLAROUND;
 		shootInfo.nWay=16;
-		shootInfo.shootAngle=(float)(rand()%256);
+		shootInfo.shootAngle=(float)(GameRandom()%256);
 		m_pStage->m_pEnemyBullet->Shoot(&shootInfo);
 		m_pStage->m_bPlaySound[3]=true;
 	}

@@ -1,6 +1,6 @@
 #pragma once
-#include "../Graphic/include/glew.h"
-#include <gl/gl.h>
+#include "mygl.h"
+#include <GL/gl.h>
 
 namespace th5w{
 

@@ -1,4 +1,5 @@
-#include ".\chara.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "Chara.h"
 #include <stdio.h>
 #include "../Stage.h"
 #include "../EnemyBullet/EnemyBullet.h"
@@ -132,7 +133,7 @@ void CChara::DecreaseDreamInBomb()
 
 void CChara::OnMissDropItem()
 {
-	int bigPowerIdx=rand()%5;
+	int bigPowerIdx=GameRandom()%5;
 	int curPosArea;
 	if (m_curX<128.0f*16.0f)
 		curPosArea=0;
@@ -149,7 +150,7 @@ void CChara::OnMissDropItem()
 		if (i==bigPowerIdx)
 			itemType=ITEM_BIGPOWER;
 		else
-			itemType=rand()%2;		//power or point
+			itemType=GameRandom()%2;		//power or point
 		if (m_pStage->m_nCurLife==1)
 			itemType=ITEM_FULLPOWER;
 		m_pStage->m_pItem->AddItem(m_curX,m_curY,itemType,velX[curPosArea][i],velY[curPosArea][i],false,false);
@@ -355,7 +356,7 @@ void CChara::Step()
 				m_deltaX=0;m_deltaY=0;
 				m_pStage->m_powerOverflowLevel=0;
 				m_missExplodeRadius=0.0f;
-				m_missExplodeBaseAngle=(float)(rand()%256);
+				m_missExplodeBaseAngle=(float)(GameRandom()%256);
 				OnMissDropItem();
 				int powerDec=m_power/4;
 				if (powerDec>16) powerDec=16;
@@ -514,7 +515,7 @@ void CChara::ShootPowerLevel0Common()
 void CChara::ShootPowerLevel1Common()
 {
 	if (m_charaShootTimer%6==0)
-		GetCharaBullet()->AddBullet(m_curX,m_curY,20,CHARA_BULLET_TYPE_NORMAL,0,0,188+(float)(rand()%8),10);
+		GetCharaBullet()->AddBullet(m_curX,m_curY,20,CHARA_BULLET_TYPE_NORMAL,0,0,188+(float)(GameRandom()%8),10);
 }
 
 }

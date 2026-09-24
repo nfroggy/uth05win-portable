@@ -1,4 +1,4 @@
-#include ".\highscorescreen.h"
+#include "HighScoreScreen.h"
 #include "../Game.h"
 #include "../../gameLib/CommonFunction/CommonFunctionInput.h"
 #include "../../gameLib/CommonFunction/CommonFunctionGraphic.h"

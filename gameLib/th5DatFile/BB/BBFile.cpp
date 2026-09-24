@@ -1,4 +1,4 @@
-#include ".\bbfile.h"
+#include "BBFile.h"
 #include <stdio.h>
 
 namespace th5w{

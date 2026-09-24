@@ -1,4 +1,4 @@
-#include ".\stageresource.h"
+#include "StageResource.h"
 #include "../Game.h"
 #include "Stage.h"
 #include "../../gameLib/Graphic/Th5ExtFont.h"
@@ -106,8 +106,8 @@ void CStageResource::Initialize()
 										//also make sure this call is before initialization of any stage
 										//component as they may require stage data that is loaded by this function
 
-	strcpy(m_stage4BossPart2BGMNames[0],"ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss");
-	strcpy(m_stage4BossPart2BGMNames[1],"ê^çgÇÃè≠èóÅ@Å` Crimson Dead!!");
+	strcpy(m_stage4BossPart2BGMNames[0],"\227\240\220\330\202\350\202\314\217\255\217\227\201\100\201\140 Judas Kiss");
+	strcpy(m_stage4BossPart2BGMNames[1],"\220\136\215\147\202\314\217\255\217\227\201\100\201\140 Crimson Dead!!");
 
 	InitTranslation();					//load translation data to overwrite the data loaded
 
@@ -391,6 +391,7 @@ void CStageResource::DrawGauge(int curValue,int fullValue,int drawX,int drawY,fl
 
 void CStageResource::DrawNumber(int numX,int numY,int number,int nDigit,bool leadingZero,bool rightAlign,float colorR,float colorG,float colorB)
 {
+	if (nDigit <= 0 || nDigit > 20) return;
 	unsigned char digit[20];
 	for (int i=0;i<nDigit;i++)
 	{

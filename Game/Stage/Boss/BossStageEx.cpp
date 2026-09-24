@@ -1,4 +1,5 @@
-#include ".\bossstageex.h"
+#include "../../../gameLib/Misc/Random.h"
+#include "BossStageEx.h"
 #include "../Stage.h"
 #include "../../Game.h"
 
@@ -175,8 +176,8 @@ int CBossStageEx::Phase2ShootType1()
 	si.shootOrigX=m_curX;
 	si.shootOrigY=m_curY;
 	si.bulletBornType=16;
-	si.bulletSpeed=(float)(40+rand()%32);
-	si.shootAngle=(float)(rand()%16*8-64);
+	si.bulletSpeed=(float)(40+GameRandom()%32);
+	si.shootAngle=(float)(GameRandom()%16*8-64);
 	si.shootType=EST03_NWAY_TO_CHARA;
 	si.bulletImg=84;
 	si.nWay=5;
@@ -191,7 +192,7 @@ int CBossStageEx::Phase2ShootType1()
 int CBossStageEx::Phase2ShootType2()
 {
 	if (m_curPhaseFrame==64)
-		m_phase2Type2Angle=(float)(rand()%256);
+		m_phase2Type2Angle=(float)(GameRandom()%256);
 	if (m_curPhaseFrame%4==0)
 	{
 		ENEMY_SHOOT_INFO si;
@@ -234,8 +235,8 @@ int CBossStageEx::Phase6ShootType1()
 		si.shootOrigX=m_curX;
 		si.shootOrigY=m_curY;
 		si.bulletBornType=16;
-		si.bulletSpeed=(float)(12+rand()%32);
-		si.shootAngle=(float)(rand()%128+128);
+		si.bulletSpeed=(float)(12+GameRandom()%32);
+		si.shootAngle=(float)(GameRandom()%128+128);
 		si.shootType=EST02_NWAY;
 		si.bulletMoveType=EBMT09_SPEED_UP_VERTICAL;
 		si.specialMoveVar=1;
@@ -247,8 +248,8 @@ int CBossStageEx::Phase6ShootType1()
 		{
 			m_pStage->m_bPlaySound[3]=true;
 			si.bulletBornType=18;
-			si.shootOrigX=m_curX+(float)(rand()%(96*16)-48*16);
-			si.shootOrigY=m_curY+(float)(rand()%(64*16)-32*16);
+			si.shootOrigX=m_curX+(float)(GameRandom()%(96*16)-48*16);
+			si.shootOrigY=m_curY+(float)(GameRandom()%(64*16)-32*16);
 			si.bulletImg=0;
 			si.shootType=EST07_MULTI_TO_CHARA;
 			si.bulletSpeed=48;
@@ -266,7 +267,7 @@ int CBossStageEx::Phase6ShootType2()
 	if (m_curPhaseFrame==64)
 	{
 		m_bPhase6Type2AngleInc=!m_bPhase6Type2AngleInc;
-		m_phase6Type2Angle=(float)(rand()%256);
+		m_phase6Type2Angle=(float)(GameRandom()%256);
 	}
 	if (m_curPhaseFrame%8==0)
 	{
@@ -306,7 +307,7 @@ int CBossStageEx::Phase10ShootType1()
 			si.bulletBornType=16;
 			si.bulletImg=68;
 			si.shootType=EST04_NWAY_ALLAROUND;
-			si.shootAngle=(float)(rand()%256);
+			si.shootAngle=(float)(GameRandom()%256);
 			si.bulletSpeed=64;
 			si.nWay=32;
 			m_pStage->m_pEnemyBullet->Shoot(&si);
@@ -326,7 +327,7 @@ int CBossStageEx::Phase10ShootType2()
 	if (m_curPhaseFrame%2==0)
 	{
 		ENEMY_SHOOT_INFO si;
-		si.shootOrigX=m_curX+(float)(rand()%(48*16)-24*16);
+		si.shootOrigX=m_curX+(float)(GameRandom()%(48*16)-24*16);
 		si.shootOrigY=m_curY;
 		si.bulletBornType=18;
 		si.shootType=EST03_NWAY_TO_CHARA;
@@ -432,8 +433,8 @@ int CBossStageEx::Phase4Shoot()
 			}
 			if (m_curPhaseFrame%16==0)
 			{
-				m_phase4AimX=m_curX+(float)(rand()%(96*16)-48*16);
-				m_phase4AimY=m_curY+(float)(rand()%(64*16)-32*16);
+				m_phase4AimX=m_curX+(float)(GameRandom()%(96*16)-48*16);
+				m_phase4AimY=m_curY+(float)(GameRandom()%(64*16)-32*16);
 				m_phase4AimAngle=m_pStage->m_pChara->AngleToChara(m_phase4AimX,m_phase4AimY);
 			}
 		}
@@ -475,7 +476,7 @@ int CBossStageEx::Phase4Shoot()
 int CBossStageEx::Phase8Shoot()
 {
 	if (m_curPhaseFrame==64)
-		m_phase8Angle=(float)(rand()%256);
+		m_phase8Angle=(float)(GameRandom()%256);
 	if (m_curPhaseFrame%16==0)
 	{
 		ENEMY_SHOOT_INFO si;
@@ -782,7 +783,7 @@ void CBossStageEx::Phase17Shoot()
 	{
 		m_curImage=181;
 		m_pStage->m_bPlaySound[8]=true;
-		m_phase17ShootAngle=(float)(rand()%256);
+		m_phase17ShootAngle=(float)(GameRandom()%256);
 	}
 	if (m_curPhaseFrame>=128)
 	{

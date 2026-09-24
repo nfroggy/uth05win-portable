@@ -19,7 +19,7 @@ protected:
 	bool ParseHeader();
 
 public:
-	__forceinline int NImage() {return m_nImage;}
+	inline int NImage() {return m_nImage;}
 	bool ExtractImageAndPalette(unsigned char *outImage, unsigned char *outPalette,int recordIdx);
 public:
 	CMPNFile(unsigned char *content,int contentLen);
